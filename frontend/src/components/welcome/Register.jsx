@@ -4,16 +4,27 @@ import govt_image from "../../assets/govt_of_india.jpg";
 
 function Register({ setPage }) {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loc, setLoc] = useState("");
-    const [role, setRole] = useState("");
-
-
-    const createAccount = (e) => {
-        console.log("sign in button clicked")
+    const init = {
+        name: "",
+        email: "",
+        password: "",
+        location: "",
+        role: ""
     }
+
+    const [formData, setFormData] = useState(init)
+
+    const handelChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value })
+    }
+
+    const handelSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+
+    }
+
 
     return (
         <div className="min-h-screen  flex  items-center justify-center bg-sky-200">
@@ -21,21 +32,21 @@ function Register({ setPage }) {
 
                 {/* Left Side - Form  */}
                 <div className="hidden sm:flex w-[40%] flex-col items-center justify-center">
-                        <img
-                            src={govt_image}
-                            alt="building"
-                            className="m-6 rounded-[50%] px-2 h-[200px] w-[200px] object-cover "
-                        />
+                    <img
+                        src={govt_image}
+                        alt="building"
+                        className="m-6 rounded-[50%] px-2 h-[200px] w-[200px] object-cover "
+                    />
                     <div>
                         <div className="mt-8">
                             <div
                                 className="w-full mt-2 px-4 py-2 text-2xl font-bold flex text-center flax justify-center text-[#3c3838]"
-                            >Digital Civix <br/> Engagement Platform</div>
+                            >Digital Civix <br /> Engagement Platform</div>
                         </div>
 
                         <div className="mt-8 ">
                             <div
-                                className="w-full mt-2 px-4 py-2 text-2sm flex text-center text-[#eeeeee]"
+                                className="w-full mt-2 px-4 py-2 text-2sm flex text-center text-[#eeeeee] text-shadow-lg"
                             >Civix enables citizens to engage in local governance through petitions, voting, and tracking officials responses. Join our platform to make your voice heard and drive positive change in your community.</div>
                         </div>
                         <div className="mt-8 ">
@@ -51,91 +62,101 @@ function Register({ setPage }) {
                     <h1 className="text-3xl font-semibold text-center text-gray-800">
                         Welcome to Civix
                     </h1>
-                    <p className="font-bold text-center text-gray-600 mt-2">
+                    <p className="font-bold text-center text-gray-700 mt-2">
                         Join our platform to make your voice heard in local governance
                     </p>
 
                     <div className="flex justify-center gap-4 mt-6 p-2 border border-gray-600 rounded-full bg-[#a1c0c8]">
-                        <button onClick={() => setPage("login")} className="font-bold flex-grow px-6 py-2 rounded-full border border-gray-700 bg-gray-300 hover:bg-gray-400 cursor-pointer ">
+                        <button onClick={() => setPage("login")} className="font-bold flex-grow px-6 py-2 rounded-full border border-gray-700  bg-white hover:bg-gray-400 cursor-pointer">
                             Login
                         </button>
-                        <button className="font-bold flex-grow px-6 py-2 rounded-full border border-gray-700 bg-white hover:bg-gray-400 cursor-pointer">
+                        <button className="font-bold flex-grow px-6 py-2 rounded-full border border-gray-700  bg-gray-300 hover:bg-gray-400 cursor-pointer ">
                             Register
                         </button>
                     </div>
+                    <form onSubmit={handelSubmit}>
+                        <div className="mt-4">
+                            <label className="text-lg block text-white font-medium text-shadow-lg/20">Full Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                placeholder="Your full name....."
+                                value={formData.name}
+                                onChange={handelChange}
+                                className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
+                            />
+                        </div>
 
-                    <div className="mt-4">
-                        <label className="text-lg block text-white font-medium">Full Name</label>
-                        <input
-                            type="email"
-                            placeholder="Your full name....."
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
-                        />
-                    </div>
+                        <div className="mt-4">
+                            <label className="text-lg block text-white font-medium text-shadow-lg/20">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                required
+                                placeholder="Your@email.com"
+                                value={formData.email}
+                                onChange={handelChange}
+                                className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
+                            />
+                        </div>
 
-                    <div className="mt-4">
-                        <label className="text-lg block text-white font-medium">Email</label>
-                        <input
-                            type="email"
-                            placeholder="Your@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
-                        />
-                    </div>
+                        <div className="mt-4">
+                            <label className="text-lg block text-white font-medium text-shadow-lg/20">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                required
+                                placeholder="********"
+                                value={formData.password}
+                                onChange={handelChange}
+                                className="w-full mt-2 px-4 py-2  bg-gray-200  text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
+                            />
+                        </div>
 
-                    <div className="mt-4">
-                        <label className="text-lg block text-white font-medium">Password</label>
-                        <input
-                            type="password"
-                            placeholder="********"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full mt-2 px-4 py-2  bg-gray-200  text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
-                        />
-                    </div>
+                        <div className="mt-4">
+                            <label className="text-lg block text-white font-medium text-shadow-lg/20">Location</label>
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Potland or...."
+                                value={formData.location}
+                                onChange={handelChange}
+                                className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
+                            />
+                        </div>
+                        <div className="mt-4 text-white flex items-center text-shadow-lg/20" >
+                            <span className="text-lg font-medium "> I am registering as: </span>
+                            <label className="m-2 font-medium"><input
+                                type="radio"
+                                name="role"
+                                value="citizen"
+                                checked={formData.role === "citizen"}
+                                onChange={handelChange}
+                                className="w-4 h-4 accent-sky-500 " /> Citizen</label>
 
-                    <div className="mt-4">
-                        <label className="text-lg block text-white font-medium">Location</label>
-                        <input
-                            type="email"
-                            placeholder="Potland or...."
-                            value={loc}
-                            onChange={(e) => setLoc(e.target.value)}
-                            className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
-                        />
-                    </div>
-                    <div className="mt-4 text-white flex items-center">
-                        <span className="text-lg font-medium "> I am registering as: </span>
-                        <label className="m-2 font-medium"><input
-                            type="radio" 
-                            name="role" 
-                            value="citizen"
-                            checked={role === "citizen"}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="w-4 h-4 accent-sky-500" /> Citizen</label>
-                        
-                        <label className="m-2 font-medium"><input
-                            type="radio" 
-                            name="role" 
-                            value="Public_officer"
-                            checked={role === "Public_officer"}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="w-4 h-4 accent-sky-500" /> Public officer</label>
-                    </div>
+                            <label className="m-2 font-medium"><input
+                                type="radio"
+                                name="role"
+                                required
+                                value="Public_officer"
+                                checked={formData.role === "Public_officer"}
+                                onChange={handelChange}
+                                className="w-4 h-4 accent-sky-500" /> Public officer</label>
+                        </div>
 
-                    <button onClick={(e) => createAccount(e)} className="w-1/2 mt-6 ml-[25%] bg-sky-500 border border-gray-600 hover:bg-sky-600 text-white py-2 rounded-full font-medium">
-                        Create Account
-                    </button>
+                        <button type="submit" className="w-1/2 mt-6 ml-[25%] bg-sky-500 border border-gray-600 hover:bg-sky-600 text-white py-2 rounded-full font-medium">
+                            Create Account
+                        </button>
+                    </form>
 
-                    <p className="text-center text-black mt-4">
+                    <p className="text-center text-blue-100 mt-4">
                         Don't have an account?{" "}
                         <a onClick={() => setPage("login")} className="text-blue-800 font-bold cursor-pointer">
                             Sign in
                         </a>
                     </p>
+
                 </div>
             </div>
         </div>
