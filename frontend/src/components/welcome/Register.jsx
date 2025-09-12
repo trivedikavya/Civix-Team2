@@ -2,7 +2,7 @@ import { useState } from "react";
 import govt_image from "../../assets/govt_of_india.jpg";
 
 
-function Register({ setPage }) {
+function Register({ setPage, onSubmit }) {
 
     const init = {
         name: "",
@@ -21,7 +21,7 @@ function Register({ setPage }) {
 
     const handelSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        onSubmit(formData, "register");
 
     }
 

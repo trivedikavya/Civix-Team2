@@ -2,7 +2,7 @@ import { useState } from "react";
 import parliament_image from "../../assets/parliament_image.jpeg";
 
 
-function Login({ setPage }) {
+function Login({ setPage, onSubmit }) {
 
     const init = {
         email: "",
@@ -18,7 +18,7 @@ function Login({ setPage }) {
 
     const handelSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        onSubmit(formData, "login");
     }
 
     return (
