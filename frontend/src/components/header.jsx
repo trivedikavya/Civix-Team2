@@ -1,10 +1,13 @@
 import { Link, NavLink } from 'react-router-dom'
 import govt_img from '../assets/govt.png'
+import { useState } from 'react';
 
 function Header() {
+    const [navClick, setNavClick] = useState(false)
 
-    return (
-        <header className="flex flex-wrap justify-between items-center mx-auto bg-gray-300 border-2 border-gray-500 p-2 fixed w-full">
+    return (<>
+
+        <header className="flex flex-wrap justify-between items-center mx-auto bg-gray-300 border-2 border-gray-500 p-2 fixed w-full mt-1">
 
             <Link to="/" className="hidden sm:flex w-1/4  items-center text-blue-500 ">
                 <img src={govt_img}
@@ -13,6 +16,14 @@ function Header() {
                 </b>
             </Link>
 
+            <button
+                className="sm:hidden text-gray-700 hover:text-orange-700"
+                onClick={() => { setNavClick(!navClick); console.log(navClick) }}
+            >
+                <i className="fa-solid fa-bars fa-lg"></i>
+            </button>
+
+            
 
             <div className="flex flex-row w-1/2 font-bold ">
                 <NavLink
@@ -40,18 +51,43 @@ function Header() {
                 <NavLink
                     to="/Reports"
                     className={({ isActive }) =>
-                        `block py-2 pr-4 pl-3  ${isActive ? "text-orange-500" : "text-gray-700"} hover:text-orange-700`
+                        `hidden sm:block py-2 pr-4 pl-3  ${isActive ? "text-orange-500" : "text-gray-700"} hover:text-orange-700`
                     }>
                     Reports
                 </NavLink>
                 <NavLink
                     to="/Oficials"
                     className={({ isActive }) =>
-                        `block py-2 pr-4 pl-3  ${isActive ? "text-orange-500" : "text-gray-700"} hover:text-orange-700`
+                        `hidden sm:block py-2 pr-4 pl-3  ${isActive ? "text-orange-500" : "text-gray-700"} hover:text-orange-700`
                     }>
                     Oficials
                 </NavLink>
             </div>
+
+            {navClick && (
+                <div className="absolute top-full left-0 w-25 bg-gray-200 flex flex-col font-bold px-4 z-50 rounded-b-2xl">
+                    <NavLink
+                        to="/Reports"
+                        className={({ isActive }) =>
+                            `block py-2 ${isActive ? "text-orange-500" : "text-gray-700"
+                            }`
+                        }
+                        onClick={() => setNavClick(false)}
+                    >
+                        Reports
+                    </NavLink>
+                    <NavLink
+                        to="/Oficials"
+                        className={({ isActive }) =>
+                            `block py-2 ${isActive ? "text-orange-500" : "text-gray-700"
+                            }`
+                        }
+                        onClick={() => setNavClick(false)}
+                    >
+                        Oficials
+                    </NavLink>
+                </div>
+            )}
 
             <div className="flex items-end justify-end w-1/4">
                 <div>
@@ -64,6 +100,7 @@ function Header() {
                 </div>
             </div>
         </header>
+    </>
     );
 }
 

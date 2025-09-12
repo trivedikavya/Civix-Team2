@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      {(user !== true) ?
+      {(user === true) ?
         <>
           <Header />
           <Outlet />

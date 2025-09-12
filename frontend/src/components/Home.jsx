@@ -4,7 +4,7 @@ function Home() {
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
 
     return (
-        <div className="pt-18 p-2 md:px-10 lg:px-40 bg-gradient-to-b from-sky-200 to-gray-500 min-h-screen">
+        <div className="pt-20 md:pt-25 p-2 md:px-10 lg:px-40 bg-gradient-to-b from-sky-200 to-gray-500 min-h-screen">
 
             <div className="bg-white rounded-lg shadow p-4 mb-6">
                 <h1 className="text-xl font-semibold italic">
@@ -43,9 +43,9 @@ function Home() {
                     <span className="bg-gray-500 font-semibold  px-2.5 rounded-lg ml-1">san Diego, CA
                     </span></p>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8" >
-            {categories.map((categori) =>
-                (<div className="border bg-white m-2 rounded-2xl px-2 text-center h-7 w-30" key={categori}>{categori}</div>)
+            <div className=" flex flex-wrap gap-4" >
+                {categories.map((categori) =>
+                    (<div className="border bg-white rounded-2xl px-4 py-1 text-center " key={categori}>{categori}</div>)
                 )}
             </div>
         </div>
