@@ -23,15 +23,18 @@ function Welcome({setUser}) {
 
             if (response.ok) {
                 console.log(`${type} successful:`, data);
-                // Here you would typically save the token (data.token) to local storage
-                // and then update the user state.
+                // Store the token in the browser's local storage
+                localStorage.setItem('token', data.token);
+                // Update the user state to log them in
                 setUser(true);
             } else {
                 console.error(`${type} failed:`, data.msg);
-                // You could display an error message to the user here
+                // Show an error message to the user
+                alert(data.msg);
             }
         } catch (error) {
             console.error('An error occurred:', error);
+            alert('An error occurred. Please try again later.');
         }
     };
 

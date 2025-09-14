@@ -5,8 +5,15 @@ import { useState } from 'react';
 function Header() {
     const [navClick, setNavClick] = useState(false)
 
-    return (<>
+    // Handles the logout process
+    const handleLogout = () => {
+        // Remove the token from local storage
+        localStorage.removeItem('token');
+        // Reload the page to reset the application state and redirect to login
+        window.location.href = '/'; 
+    };
 
+    return (<>
         <header className="flex flex-wrap justify-between items-center mx-auto bg-gray-300 border-2 border-gray-500 p-2 fixed w-full mt-1">
 
             <Link to="/" className="hidden sm:flex w-1/4  items-center text-blue-500 ">
@@ -22,8 +29,6 @@ function Header() {
             >
                 <i className="fa-solid fa-bars fa-lg"></i>
             </button>
-
-            
 
             <div className="flex flex-row w-1/2 font-bold ">
                 <NavLink
@@ -89,7 +94,7 @@ function Header() {
                 </div>
             )}
 
-            <div className="flex items-end justify-end w-1/4">
+            <div className="flex items-center justify-end w-1/4">
                 <div>
                     <img src='https://cdn-icons-png.flaticon.com/512/565/565422.png' className="mr-1 h-7" alt="Logo " />
                 </div>
@@ -98,11 +103,17 @@ function Header() {
                     className="text-gray-800 font-bold  text-sm px-4">
                     Sri
                 </div>
+                {/* --- LOGOUT BUTTON ADDED HERE --- */}
+                <button 
+                    onClick={handleLogout}
+                    className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-1 px-3 rounded-full"
+                >
+                    Logout
+                </button>
             </div>
         </header>
     </>
     );
 }
-
 
 export default Header;
