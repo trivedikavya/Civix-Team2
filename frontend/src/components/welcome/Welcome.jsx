@@ -1,6 +1,6 @@
 // frontend/src/components/welcome/Welcome.jsx
 
-import Login from "./login";
+import Login from "./Login";
 import Register from "./Register";
 import { useState } from "react";
 
