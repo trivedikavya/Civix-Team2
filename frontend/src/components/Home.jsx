@@ -1,6 +1,7 @@
+import { useAuth } from '../context/AuthContext'; // 1. Import the useAuth hook
 
 function Home() {
-
+const { user } = useAuth(); // 2. Get the user object from the context
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
 
     return (
@@ -8,7 +9,8 @@ function Home() {
 
             <div className="bg-white rounded-lg shadow p-4 mb-6">
                 <h1 className="text-xl font-semibold italic">
-                    welcome back, <span className="font-bold">Sri!</span>
+                     {/* 3. Use the user's name dynamically */}
+                    welcome back, <span className="font-bold">{user ? user.name : 'User'}!</span>
                 </h1>
                 <p className="text-gray-600 mt-2">
                     See what's happening in your community and make your voice heard.

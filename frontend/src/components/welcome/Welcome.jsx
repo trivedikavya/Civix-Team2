@@ -1,40 +1,22 @@
-// frontend/src/components/welcome/Welcome.jsx
-
-import Login from "./login";
+import Login from "./Login";
 import Register from "./Register";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
-function Welcome({setUser}) {
+function Welcome() {
     const [page, setPage] = useState("login");
+    const { login, register } = useAuth();
 
     const handleSubmit = async (formData, type) => {
-        const url = `http://localhost:5000/api/auth/${type}`; // 'login' or 'register'
-
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log(`${type} successful:`, data);
-                // Store the token in the browser's local storage
-                localStorage.setItem('token', data.token);
-                // Update the user state to log them in
-                setUser(true);
+            if (type === 'login') {
+                await login(formData);
             } else {
-                console.error(`${type} failed:`, data.msg);
-                // Show an error message to the user
-                alert(data.msg);
+                const { name, email, password, location, role } = formData;
+                await register({ name, email, password, location, role });
             }
         } catch (error) {
-            console.error('An error occurred:', error);
-            alert('An error occurred. Please try again later.');
+            alert(error.message);
         }
     };
 

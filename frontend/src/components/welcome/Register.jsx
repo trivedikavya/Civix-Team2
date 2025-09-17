@@ -13,6 +13,7 @@ function Register({ setPage, onSubmit }) {
     }
 
     const [formData, setFormData] = useState(init)
+    const [errors, setErrors] = useState({});
 
     const handelChange = (e) => {
         const { name, value } = e.target;
@@ -21,9 +22,39 @@ function Register({ setPage, onSubmit }) {
 
     const handelSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData, "register");
-
+        if (validate()) {
+            // UPDATED THIS LINE
+            onSubmit(formData, "register"); 
+        }
     }
+
+    const validate = () => {
+        let newErrors = {};
+
+        if (!formData.name) {
+            newErrors.name = "Name is required";
+        }
+
+        if (!formData.email) {
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = "Enter a valid email address";
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters long";
+        }
+
+        if (!formData.role) {
+            newErrors.role = "Please select one";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
 
 
     return (
@@ -75,46 +106,58 @@ function Register({ setPage, onSubmit }) {
                         </button>
                     </div>
                     <form onSubmit={handelSubmit}>
-                        <div className="mt-4">
+                        <div className="mt-2">
                             <label className="text-lg block text-white font-medium text-shadow-lg/20">Full Name</label>
                             <input
                                 type="text"
                                 name="name"
-                                required
                                 placeholder="Your full name....."
                                 value={formData.name}
                                 onChange={handelChange}
                                 className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
                             />
+                            <div className="min-h-[24px]">
+                                {errors.name && (
+                                    <p className="text-red-600 text-md text-shadow-white font-medium">{errors.name}</p>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="">
                             <label className="text-lg block text-white font-medium text-shadow-lg/20">Email</label>
                             <input
-                                type="email"
+                                type="text"
                                 name="email"
-                                required
                                 placeholder="Your@email.com"
                                 value={formData.email}
                                 onChange={handelChange}
                                 className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
                             />
+                            <div className="min-h-[24px]">
+                                {errors.email && (
+                                    <p className="text-red-600 text-md text-shadow-white font-medium">{errors.email}</p>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="">
                             <label className="text-lg block text-white font-medium text-shadow-lg/20">Password</label>
                             <input
                                 type="password"
                                 name="password"
-                                required
                                 placeholder="********"
                                 value={formData.password}
                                 onChange={handelChange}
                                 className="w-full mt-2 px-4 py-2  bg-gray-200  text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
                             />
+                            <div className="min-h-[24px]">
+                                {errors.password && (
+                                    <p className="text-red-600 text-md text-shadow-white font-medium">{errors.password}</p>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="">
                             <label className="text-lg block text-white font-medium text-shadow-lg/20">Location</label>
                             <input
                                 type="text"
@@ -125,7 +168,8 @@ function Register({ setPage, onSubmit }) {
                                 className="w-full mt-2 px-4 py-2 bg-gray-200 text-xl border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-400"
                             />
                         </div>
-                        <div className="mt-4 text-white flex items-center text-shadow-lg/20" >
+
+                        <div className="mt-1 text-white flex items-center text-shadow-lg/20" >
                             <span className="text-lg font-medium "> I am registering as: </span>
                             <label className="m-2 font-medium"><input
                                 type="radio"
@@ -138,20 +182,24 @@ function Register({ setPage, onSubmit }) {
                             <label className="m-2 font-medium"><input
                                 type="radio"
                                 name="role"
-                                required
                                 value="Public_officer"
                                 checked={formData.role === "Public_officer"}
                                 onChange={handelChange}
                                 className="w-4 h-4 accent-sky-500" /> Public officer</label>
                         </div>
+                        <div className="min-h-[24px]">
+                            {errors.role && (
+                                <p className="text-red-600 text-md text-shadow-white font-medium">{errors.role}</p>
+                            )}
+                        </div>
 
-                        <button type="submit" className="w-1/2 mt-6 ml-[25%] bg-sky-500 border border-gray-600 hover:bg-sky-600 text-white py-2 rounded-full font-medium">
+                        <button type="submit" className="w-1/2 mt-3 ml-[25%] bg-sky-500 border border-gray-600 hover:bg-sky-600 text-white py-2 rounded-full font-medium">
                             Create Account
                         </button>
                     </form>
 
-                    <p className="text-center text-blue-100 mt-4">
-                        Don't have an account?{" "}
+                    <p className="text-center text-blue-100 mt-3 mb-1">
+                        Already have an account?{" "}
                         <a onClick={() => setPage("login")} className="text-blue-800 font-bold cursor-pointer">
                             Sign in
                         </a>

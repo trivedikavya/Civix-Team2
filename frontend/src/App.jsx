@@ -1,33 +1,28 @@
-import { useState, useEffect } from 'react';
-import './App.css'
-import  Welcome from './components/welcome/Welcome'
+import './App.css';
+import Welcome from './components/welcome/Welcome';
 import Header from './components/header';
 import { Outlet } from 'react-router-dom';
-
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const [user, setUser] = useState(false);
+    const { user, loading } = useAuth();
 
-  // This hook checks for a token in localStorage when the app starts
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setUser(true);
+    if (loading) {
+        return <div>Loading...</div>;
     }
-  }, []); // The empty array ensures this runs only once
 
-
-  return (
-    <>
-      {(user === true) ?
+    return (
         <>
-          <Header />
-          <Outlet />
-        </> :
-        <Welcome setUser={ setUser} />}
-      
-    </>
-  )
+            {user ? (
+                <>
+                    <Header />
+                    <Outlet />
+                </>
+            ) : (
+                <Welcome />
+            )}
+        </>
+    );
 }
 
 export default App;
