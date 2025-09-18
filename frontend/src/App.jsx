@@ -4,6 +4,8 @@ import './App.css'
 import  Welcome from './components/welcome/Welcome'
 import Header from './components/header';
 import { Outlet } from 'react-router-dom';
+import Dashboard from './components/Dashboard/Dashboard';
+
 
 
 function App() {
@@ -11,13 +13,14 @@ function App() {
 
   return (
     <>
-      {(user === true) ?
+      {/* {(user !== true) ?
         <>
           <Header />
           <Outlet />
         </> :
-        <Welcome setUser={ setUser} />}
+        <Welcome setUser={ setUser} />} */}
       
+       <Dashboard />
     </>
   )
 }
