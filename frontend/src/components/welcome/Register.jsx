@@ -32,6 +32,8 @@ function Register({ setPage, onSubmit }) {
         }
     }
 
+
+    
     const validate = () => {
         let newErrors = {};
 
