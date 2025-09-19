@@ -23,7 +23,12 @@ function Register({ setPage, onSubmit }) {
     const handelSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
+
+            // UPDATED THIS LINE
+            onSubmit(formData, "register"); 
+
             onSubmit(formData, "login");
+
         }
     }
 
@@ -198,7 +203,11 @@ function Register({ setPage, onSubmit }) {
                     </form>
 
                     <p className="text-center text-blue-100 mt-3 mb-1">
+
+                        Already have an account?{" "}
+
                         Don't have an account?{" "}
+
                         <a onClick={() => setPage("login")} className="text-blue-800 font-bold cursor-pointer">
                             Sign in
                         </a>
