@@ -1,6 +1,6 @@
 import './App.css';
 import Welcome from './components/welcome/Welcome';
-import Header from './components/header.jsx';
+import Header from './components/header';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 

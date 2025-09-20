@@ -19,11 +19,7 @@ function Home() {
     }
 
     return (
-
-        <div className="pt-20 md:pt-25 p-4 bg-gradient-to-b from-sky-200 to-gray-500 min-h-screen md:pl-54">
-
-        <div className="pt-22 md:pt-25 p-2 md:px-10 lg:px-40 bg-gradient-to-b from-sky-200 to-gray-500 min-h-screen">
-
+        <div className="pt-20 md:pt-25 p-4 bg-gradient-to-b from-sky-200 to-gray-500 min-h-screen md:pl-54 lg:pl-64 lg:pr-10">
 
             <div className="bg-white rounded-lg shadow py-6 p-4 mb-6">
                 <h1 className="text-3xl font-semibold italic">

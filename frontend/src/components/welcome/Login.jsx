@@ -1,6 +1,6 @@
 import { useState } from "react";
 import parliament_image from "../../assets/parliament_image.jpeg";
-import '../../App.css'
+
 
 
 function Login({ setPage, onSubmit }) {
@@ -46,7 +46,7 @@ function Login({ setPage, onSubmit }) {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-sky-200">
-            <div className="bg-gradient-to-b from-sky-300 to-gray-500 w-[900px] h-[600px] rounded-lg shadow-xl flex overflow-hidden justify-center ">
+            <div className="bg-gradient-to-b from-sky-300 to-gray-500 w-[900px] h-[550px] rounded-lg shadow-xl flex overflow-hidden justify-center ">
 
                 {/* Left Side - Image  */}
                 <div className="hidden sm:flex w-1/2 items-center justify-center">
@@ -58,7 +58,7 @@ function Login({ setPage, onSubmit }) {
                 </div>
 
                 {/* Right Side - Form */}
-                <div className="w-full sm:w-1/2 min-w-90 max-w-125  flex flex-col justify-center px-9">
+                <div className="w-full sm:w-1/2 min-w-90 max-w-100  flex flex-col justify-center px-9">
                     <h1 className="text-3xl font-semibold text-center text-gray-800">
                         Welcome to Civix
                     </h1>
