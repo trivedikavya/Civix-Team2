@@ -81,7 +81,7 @@ function Sidebar({ navClick, setNavClick }) {
                         Help & Support</NavLink>
                     <NavLink
                         to="#"
-                        className="block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl bg-white text-gray-700 hover:text-orange-700 items-center"
+                        className="block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl bg-orange-100 text-red-800 hover:bg-orange-400 hover:text-black items-center"
                         onClick={logout}>
                         <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
                         Logout

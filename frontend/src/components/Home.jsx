@@ -14,8 +14,10 @@ function Home() {
         'Pune, MH'
     ];
     const [activeCategoriy, setActiveCategori] = useState('All Categories');
-    const activeCategori = (categori) => {
-        setActiveCategori(categori);
+    const [selectedCity, setSelectedCity] = useState(cities[0] || "");
+    function clearFilter() {
+        setActiveCategori('All Categories');
+        setSelectedCity(cities[0] || "");
     }
 
     return (
@@ -54,30 +56,50 @@ function Home() {
             </div>
 
             {/* Active Petitions */}
-            <div className="flex justify-between items-center mb-4 p-4">
-                <h2 className="text-lg font-semibold border-b-2">Active Petitions Near You</h2>
+            <div className="mb-4 p-4 bg-white rounded-lg shadow-sm">
+                {/* Title */}
+                <h2 className="text-lg sm:text-xl font-medium text-center mb-4 pb-2 border-b border-gray-400">
+                    Active Petitions Near You
+                </h2>
 
-                <p className="text-gray-900 text-md flex">Showing for:
-                    <span className="bg-gray-500 font-semibold  px-2.5 rounded-lg ml-1">
-                        <select className="bg-gray-500 text-white font-semibold rounded-lg px-1 cursor-pointer ">
+                {/* Mobile Stack, Desktop Flex */}
+                <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+
+                    {/* Location */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-700 text-sm font-medium min-w-fit">Showing for:</span>
+                        <select
+                            value={selectedCity}
+                            onChange={(e) => setSelectedCity(e.target.value)}
+                            className="flex-1 sm:flex-none bg-gray-600 text-white font-medium px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             {cities.map((city, index) => (
-                                <option key={index} value={city}>
-                                    {city}
-                                </option>
+                                <option key={index} value={city}>{city}</option>
                             ))}
                         </select>
-                    </span></p>
+                    </div>
+
+                    {/* Category */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-700 text-sm font-medium min-w-fit">Category:</span>
+                        <select
+                            value={activeCategoriy}
+                            onChange={(e) => setActiveCategori(e.target.value)}
+                            className="flex-1 sm:flex-none bg-gray-600 text-white font-medium px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            {categories.map((category, index) => (
+                                <option key={index} value={category}>{category}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                <div className='flex justify-center flex-wrap py-6'>
+
+                    <p className='w-full text-center text-2xl sm:font-mono py-2'>no petion found...............</p>
+
+                    <button className='border px-2 text-xl text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-400' onClick={() => clearFilter()}>Clear Filter</button>
+                </div>
             </div>
 
-            <div className=" flex flex-wrap gap-4" >
-                {categories.map((categori) =>
-                    (<div className={`border text-[16px] rounded-2xl  px-4 py-1 text-center hover:bg-gray-400 hover:font-medium cursor-pointer ${activeCategoriy === categori ? "bg-gray-500 text-white border-black" : "bg-white border-gray-300"}`} key={categori} onClick={() => activeCategori(categori)}>{categori}</div>)
-                )}
-            </div>
-            <div className='flex justify-center flex-wrap py-6'>
-                <p className='w-full text-center text-2xl font-mono py-2'>no petion found...............</p>
-                <button className='border px-2 text-xl bg-white rounded-md cursor-pointer hover:bg-gray-400' onClick={() => setActiveCategori("All Categories")}>Clear Filter</button>
-            </div>
         </div>
     )
 }
