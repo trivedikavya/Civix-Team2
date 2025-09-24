@@ -4,7 +4,7 @@ const User = require('../models/User');
 // Get all petitions
 exports.getPetitions = async (req, res) => {
     try {
-        const petitions = await Petition.find().populate('author', 'name').sort({ date: -1 });
+        const petitions = await Petition.find().populate('author', 'name').populate('signatures', 'name').sort({ date: -1 });
         res.json(petitions);
     } catch (err) {
         console.error(err.message);
@@ -26,7 +26,8 @@ exports.createPetition = async (req, res) => {
         });
 
         const petition = await newPetition.save();
-        res.json(petition);
+        const populatedPetition = await Petition.findById(petition._id).populate('author', 'name');
+        res.json(populatedPetition);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -53,7 +54,8 @@ exports.signPetition = async (req, res) => {
 
         petition.signatures.unshift(req.user.id);
         await petition.save();
-        res.json(petition.signatures);
+        const finalPetition = await Petition.findById(req.params.id).populate('author', 'name').populate('signatures', 'name');
+        res.json(finalPetition);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -130,7 +132,7 @@ exports.updatePetitionStatus = async (req, res) => {
             req.params.id,
             { $set: { status: req.body.status } },
             { new: true }
-        );
+        ).populate('author', 'name').populate('signatures', 'name');
 
         res.json(petition);
     } catch (err) {

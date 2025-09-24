@@ -1,10 +1,8 @@
-// File: frontend/src/components/petitions/Petitions.jsx
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { CreatePetitionModal } from './CreatePetitionModal';
+import { EditPetitionModal } from './EditPetitionModal';
 import PetitionComponent from './PetitionComponent';
-
 
 // --- Petition Details Modal Component ---
 const PetitionDetailsModal = ({ isOpen, onClose, petition }) => {
@@ -25,104 +23,20 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition }) => {
     );
 };
 
-
 // --- Main Petitions Component ---
 function Petitions() {
-    // Dummy data for demonstration
-    const dummy_petition = [
-        {
-            "_id": "25004620sdfs0sd5f",
-            "author": {
-                "_id": "user12345",
-                "name": "John Doe",
-            },
-            "category": "Education",
-            "title": "Primary School",
-            "description": "We want a primary school in our village",
-            "signatures": [
-                { "_id": "0254120150" },
-                { "_id": "65902450" }
-            ],
-            "signatureGoal": 100,
-            "status" : "Active"
-        },
-        {
-            "_id": "25004620s2dfs0sd5f",
-            "author": {
-                "_id": "68cb0008cdf2f43b1ebbaf97",
-                "name": "abcdfg",
-            },
-            "category": "Healthcare",
-            "title": "Village Health Center",
-            "description": "A small health center is needed for basic medical care",
-            "signatures": [
-                { "_id": "987650124" },
-                { "_id": "874510245" }
-            ],
-            "signatureGoal": 150,
-            "status": "Active"
-        },
-        {
-            "_id": "25004620s2dfs0sssd5f",
-            "author": {
-                "_id": "68cb00087",
-                "name": "John Doe",
-            },
-            "category": "Infrastructure",
-            "title": "Better Roads",
-            "description": "Requesting repair and construction of village roads",
-            "signatures": [
-                { "_id": "78451203" },
-                { "_id": "68cb0008cdf2f43b1ebbaf97" }
-            ],
-            "signatureGoal": 200,
-            "status": "Active"
-        },
-        {
-            "_id": "35004620xyz123sd5f",
-            "author": {
-                "_id": "user12345",
-                "name": "John Doe",
-            },
-            "category": "Public Safety",
-            "title": "Street Lights Installation",
-            "description": "We need proper street lighting to reduce accidents and thefts",
-            "signatures": [
-                { "_id": "11002547" },
-                { "_id": "68cb0008cdf2f43b1ebbaf97" },
-                { "_id": "33004769" }
-            ],
-            "signatureGoal": 80,
-            "status": "Closed"
-        },
-        {
-            "_id": "45004620abc456sd5f",
-            "author": {
-                "_id": "user12345",
-                "name": "John Doe",
-            },
-            "category": "Environment",
-            "title": "Plant More Trees",
-            "description": "Launch a tree plantation drive in the village for clean air",
-            "signatures": [
-                { "_id": "44001234" },
-                { "_id": "55002345" }
-            ],
-            "signatureGoal": 300,
-            "status": "Closed"
-        }
-    ];
-
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
     const [selectedCategoriy, setSelectedCategori] = useState('All Categories');
     const { user, token } = useAuth();
     const [activeTab, setActiveTab] = useState('all');
-    const [petitions, setPetitions] = useState(dummy_petition || []);
+    const [petitions, setPetitions] = useState([]);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [selectedPetition, setSelectedPetition] = useState(null);
+    const [petitionToEdit, setPetitionToEdit] = useState(null);
 
     useEffect(() => {
         const fetchPetitions = async () => {
@@ -146,7 +60,7 @@ function Petitions() {
         if (activeTab === 'my') {
             filtered = petitions.filter(p => p.author._id === user._id);
         } else if (activeTab === 'signed') {
-            filtered = petitions.filter(p => p.signatures.some(sig => sig._id=== user._id));
+            filtered = petitions.filter(p => p.signatures.some(sig => sig._id === user._id));
         } else {
             filtered = petitions;
         }
@@ -165,15 +79,54 @@ function Petitions() {
             });
             const data = await response.json();
              if (!response.ok) throw new Error(data.msg || 'Failed to sign petition.');
-            setPetitions(petitions.map(p => p._id === petitionId ? {...p, signatures: data} : p));
+            setPetitions(petitions.map(p => p._id === petitionId ? data : p));
         } catch (error) {
             alert(error.message);
         }
     };
 
-    const handleChangePetitionStatus = (petitionsId,status) => {
-        // update petition status
-    }
+    const handleChangePetitionStatus = async (petitionId, status) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/petitions/${petitionId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token
+                },
+                body: JSON.stringify({ status })
+            });
+            const updatedPetition = await response.json();
+            if (!response.ok) throw new Error(updatedPetition.msg || 'Failed to update status.');
+            setPetitions(petitions.map(p => p._id === petitionId ? updatedPetition : p));
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleDeletePetition = async (petitionId) => {
+        if (window.confirm('Are you sure you want to delete this petition?')) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/petitions/${petitionId}`, {
+                    method: 'DELETE',
+                    headers: { 'x-auth-token': token }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.msg || 'Failed to delete petition.');
+                setPetitions(petitions.filter(p => p._id !== petitionId));
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    };
+
+    const handleOpenEditModal = (petition) => {
+        setPetitionToEdit(petition);
+        setEditModalOpen(true);
+    };
+
+    const handlePetitionUpdated = (updatedPetition) => {
+        setPetitions(petitions.map(p => (p._id === updatedPetition._id ? updatedPetition : p)));
+    };
 
     const viewDetails = (petition) => {
         setSelectedPetition(petition);
@@ -181,13 +134,18 @@ function Petitions() {
     };
     
     const handlePetitionCreated = (newPetition) => {
-        const populatedPetition = { ...newPetition, author: { _id: user._id, name: user.name } };
-        setPetitions(prev => [populatedPetition, ...prev]);
+        setPetitions(prev => [newPetition, ...prev]);
     };
 
     return (
         <>
             <CreatePetitionModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} onPetitionCreated={handlePetitionCreated} />
+            <EditPetitionModal
+                isOpen={isEditModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                petition={petitionToEdit}
+                onPetitionUpdated={handlePetitionUpdated}
+            />
             <PetitionDetailsModal isOpen={isDetailsModalOpen} onClose={() => setDetailsModalOpen(false)} petition={selectedPetition} />
 
             <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
@@ -229,7 +187,16 @@ function Petitions() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredPetitions.map((petition) => 
-                                <PetitionComponent key={petition._id} petition={petition} user={user} handleSignPetition={handleSignPetition} viewDetails={viewDetails} handleChangePetitionStatus={handleChangePetitionStatus} />
+                                <PetitionComponent
+                                    key={petition._id}
+                                    petition={petition}
+                                    user={user}
+                                    handleSignPetition={handleSignPetition}
+                                    viewDetails={viewDetails}
+                                    handleChangePetitionStatus={handleChangePetitionStatus}
+                                    handleDelete={handleDeletePetition}
+                                    handleEdit={handleOpenEditModal}
+                                />
                             )}
                         </div>
                     )}

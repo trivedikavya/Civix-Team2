@@ -1,4 +1,4 @@
-export default function PetitionComponent({ petition, user, handleSignPetition, viewDetails, handleChangePetitionStatus }) {
+export default function PetitionComponent({ petition, user, handleSignPetition, viewDetails, handleChangePetitionStatus, handleDelete, handleEdit }) {
 
 
     if (!user) return null;
@@ -9,7 +9,17 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
 
 
     return (
-        <div key={petition._id} className="bg-white border border-gray-200 rounded-lg shadow-sm p-5 flex flex-col justify-between hover:shadow-lg hover:shadow-gray-400 transition-shadow">
+        <div key={petition._id} className="relative bg-white border border-gray-200 rounded-lg shadow-sm p-5 flex flex-col justify-between hover:shadow-lg hover:shadow-gray-400 transition-shadow">
+            {isAuthor && (
+                <div className="absolute top-2 right-2 flex space-x-2">
+                    <button onClick={() => handleEdit(petition)} className="text-gray-500 hover:text-blue-600">
+                        <i className="fa-solid fa-pencil"></i>
+                    </button>
+                    <button onClick={() => handleDelete(petition._id)} className="text-gray-500 hover:text-red-600">
+                        <i className="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            )}
             <div>
                 <h3 className="font-bold text-lg mb-1">{petition.title}</h3>
                 <p className="text-sm text-gray-500 mb-3">by {petition.author.name}</p>
@@ -20,6 +30,7 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                     <span className="font-bold">{petition.signatures.length}</span> of {petition.signatureGoal} signatures
                     {isPublic_officer ?
                         <select
+                            value={petition.status} // Controlled component
                             onChange={(e) => handleChangePetitionStatus(petition._id, e.target.value)}
                             className={`ml-2 px-2 py-0.5 ${petition.status === "Active"
                                 ? "text-green-800 bg-green-100"
