@@ -37,7 +37,7 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
 
     if (!user) return null;
 
-    const isSigned = petition.signatures.includes(user._id);
+    const isSigned = petition.signatures.some(sig => sig._id === user._id);
     const isAuthor = petition.author._id === user._id;
     const isPublic_officer = user.role === 'Public_officer';
 
@@ -71,11 +71,11 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                                 {isPublic_officer ?
                                     <select
                                         value={petition.status} // Controlled component
-                                        onChange={(e) => handleChangePetitionStatus(petition._id, e.target.value)}
+                                        onChange={(e) => handleChangePetitionStatus(petition, e.target.value)}
                                         className={`ml-2 px-2 py-0.5 ${petition.status === "Active"
                                             ? "text-green-800"
                                             : "text-red-800"
-                                            } rounded-full text-md font-semibold`}
+                                            } rounded-full text-md font-semibold cursor-pointer`}
                                     >
                                         <option value="Active">Active</option>
                                         <option value="Closed">Closed</option>
