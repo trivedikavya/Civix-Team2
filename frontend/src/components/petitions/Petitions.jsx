@@ -5,7 +5,7 @@ import { CreatePetitionModal } from './CreatePetitionModal';
 import PetitionComponent from './PetitionComponent';
 
 function Petitions() {
- 
+
     const cities = [
         'All locations',
         'Mumbai, MH',
@@ -19,7 +19,7 @@ function Petitions() {
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
     const [selectedCategoriy, setSelectedCategori] = useState('All Categories');
     const [selectedCity, setSelectedCity] = useState(cities[0] || "");
-    const [ selctedStatus, setSelectedStatus ] = useState('All');
+    const [selctedStatus, setSelectedStatus] = useState('All');
     const { user, token } = useAuth();
     const [activeTab, setActiveTab] = useState('all');
     const [petitions, setPetitions] = useState([]);
@@ -51,7 +51,9 @@ function Petitions() {
         if (activeTab === 'my') {
             filtered = petitions.filter(p => p.author._id === user._id);
         } else if (activeTab === 'signed') {
-            filtered = petitions.filter(p => p.signatures.includes(user._id));
+            filtered = petitions.filter(p =>
+                p.signatures.some(sig => sig._id === user._id)
+            );
         } else {
             filtered = petitions;
         }
@@ -65,7 +67,7 @@ function Petitions() {
             filtered = filtered.filter(p => p.location === selectedCity);
         }
         setFilteredPetitions(filtered);
-    }, [activeTab, petitions, user, selectedCity, selectedCategoriy,selctedStatus]);
+    }, [activeTab, petitions, user, selectedCity, selectedCategoriy, selctedStatus]);
 
 
     const handleSignPetition = async (petitionId) => {
@@ -98,14 +100,42 @@ function Petitions() {
         }
     };
 
+    const handleChangePetitionStatus = async (petition, petitionStatus) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/petitions/${petition._id}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token
+                },
+                body: JSON.stringify({ status: petitionStatus }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || 'Failed to update petition status.');
+            handlePetitionUpdated(data);
+        } catch (err) {
+            console.error("Update petition status error:", err.message);
+            alert(err.message);
+        }
+    };
+
+
     const handleOpenEditModal = (petition) => {
         setPetitionToEdit(petition);
         setEditModalOpen(true);
     };
 
     const handlePetitionUpdated = (updatedPetition) => {
-        setPetitions(petitions.map(p => (p._id === updatedPetition._id ? updatedPetition : p)));
+        // If only author ID is returned, restore the old author object
+        const existing = petitions.find(p => p._id === updatedPetition._id);
+        const fixed = {
+            ...updatedPetition,
+            author: updatedPetition.author?._id ? updatedPetition.author : existing.author
+        };
+
+        setPetitions(petitions.map(p => (p._id === fixed._id ? fixed : p)));
     };
+
 
 
 
@@ -135,7 +165,7 @@ function Petitions() {
                         </button>
                     </div>
 
-                    <div className='bg-white p-6 rounded-4xl shadow-sm border border-gray-200'>
+                    <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200'>
                         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
                             <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
                                 <button onClick={() => setActiveTab('all')} className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === 'all' ? 'bg-white shadow' : 'text-gray-600'}`}>All Petitions</button>
@@ -148,8 +178,8 @@ function Petitions() {
                                     <select
                                         value={selectedCity}
                                         onChange={(e) => setSelectedCity(e.target.value)} className="cursor-pointer text-sm">{cities.map((city, index) => (
-                                        <option key={index} value={city}>{city}</option>
-                                    ))}</select>
+                                            <option key={index} value={city}>{city}</option>
+                                        ))}</select>
                                 </div>
                                 <div className='border border-gray-300 rounded-lg p-2 bg-sky-200'>
                                     <i className="fa-solid fa-filter"></i>
@@ -164,7 +194,7 @@ function Petitions() {
                                 <div className='border border-gray-300 rounded-lg p-2 bg-sky-200'>
                                     status:<select
                                         value={selctedStatus}
-                                        onChange={(e)=>setSelectedStatus(e.target.value)}
+                                        onChange={(e) => setSelectedStatus(e.target.value)}
                                         className="cursor-pointer text-sm"> <option value="All">All</option>
                                         <option value="Active">Active</option>
                                         <option value="Closed">Closed</option></select>
@@ -179,12 +209,10 @@ function Petitions() {
                                 <p className="text-gray-500">No petitions found for this filter.</p>
                             </div>
                         ) : (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPetitions.map((petition) =>
-                                    <PetitionComponent key={petition._id} petition={petition} user={user} handleSignPetition={handleSignPetition} 
-                                        handleDelete={handleDeletePetition}
-                                        handleEdit={handleOpenEditModal}
-                                    />
+                                    <PetitionComponent key={petition._id} petition={petition} user={user} handleSignPetition={handleSignPetition} handleChangePetitionStatus={handleChangePetitionStatus}
+                                        handleDelete={handleDeletePetition} handleEdit={handleOpenEditModal} />
                                 )}
                             </div>
                         )}

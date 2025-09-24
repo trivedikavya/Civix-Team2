@@ -13,7 +13,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="flex flex-wrap justify-between items-center mx-auto bg-gray-100 p-3 shadow-md border-b-2 fixed w-full h-17">
+            <header className="flex flex-wrap justify-between items-center mx-auto bg-gray-100 p-3 shadow-md fixed w-full h-17">
                 <div className='flex'>
                     <button
                         className="block text-2xl border rounded-xl hover:text-orange-700 mr-3 md:hidden px-1.5 cursor-pointer"
