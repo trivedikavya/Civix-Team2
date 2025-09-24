@@ -30,6 +30,10 @@ const PetitionSchema = new Schema({
   location: {
     type: String
   },
+  status: {
+    type: String,
+    default: 'Active',
+  },
   date: {
     type: Date,
     default: Date.now,

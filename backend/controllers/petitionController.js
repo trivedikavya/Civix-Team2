@@ -40,6 +40,12 @@ exports.signPetition = async (req, res) => {
         if (!petition) {
             return res.status(404).json({ msg: 'Petition not found' });
         }
+
+        // Check if the user is the author of the petition
+        if (petition.author.toString() === req.user.id) {
+            return res.status(400).json({ msg: 'You cannot sign your own petition' });
+        }
+
         // Check if user has already signed
         if (petition.signatures.includes(req.user.id)) {
             return res.status(400).json({ msg: 'You have already signed this petition' });
@@ -48,6 +54,85 @@ exports.signPetition = async (req, res) => {
         petition.signatures.unshift(req.user.id);
         await petition.save();
         res.json(petition.signatures);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Update a petition
+exports.updatePetition = async (req, res) => {
+    const { title, description, category, signatureGoal, location } = req.body;
+
+    try {
+        let petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        // Check if the user is the author of the petition
+        if (petition.author.toString() !== req.user.id) {
+            return res.status(401).json({ msg: 'User not authorized' });
+        }
+
+        petition = await Petition.findByIdAndUpdate(
+            req.params.id,
+            { $set: { title, description, category, signatureGoal, location } },
+            { new: true }
+        );
+
+        res.json(petition);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Delete a petition
+exports.deletePetition = async (req, res) => {
+    try {
+        let petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        // Check if the user is the author of the petition
+        if (petition.author.toString() !== req.user.id) {
+            return res.status(401).json({ msg: 'User not authorized' });
+        }
+
+        await Petition.findByIdAndDelete(req.params.id);
+
+
+        res.json({ msg: 'Petition removed' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Update petition status
+exports.updatePetitionStatus = async (req, res) => {
+    try {
+        let petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        const user = await User.findById(req.user.id);
+
+        // Check if the user is a public officer
+        if (user.role !== 'Public_officer') {
+            return res.status(401).json({ msg: 'User not authorized to change status' });
+        }
+
+        petition = await Petition.findByIdAndUpdate(
+            req.params.id,
+            { $set: { status: req.body.status } },
+            { new: true }
+        );
+
+        res.json(petition);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
