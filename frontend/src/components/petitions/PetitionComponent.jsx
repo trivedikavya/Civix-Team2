@@ -49,12 +49,14 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                 <div>
                     {isAuthor && (
                         <div className="relative flex justify-end space-x-4">
+                            { (handleEdit && handleDelete) && (<>
                             <button onClick={() => handleEdit(petition)} className="text-gray-600 hover:text-blue-600 cursor-pointer">
                                 <i className="fa-solid fa-pencil"></i>
-                            </button>
+                                </button>
                             <button onClick={() => handleDelete(petition._id)} className="text-red-500 hover:text-red-700 cursor-pointer">
                                 <i className="fa-solid fa-trash"></i>
                             </button>
+                            </> )}
                         </div>
                     )}
                     <h3 className="font-bold text-lg mb-1">{petition.title}</h3>
@@ -68,7 +70,7 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                                 <span className="font-bold">{petition.signatures.length}</span> of {petition.signatureGoal} signatures
                             </div>
                             <div>
-                                {isPublic_officer ?
+                                {isPublic_officer && handleChangePetitionStatus ?
                                     <select
                                         value={petition.status} // Controlled component
                                         onChange={(e) => handleChangePetitionStatus(petition, e.target.value)}
@@ -98,7 +100,7 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                             <span className={`px-3 py-1 text-xs font-bold rounded-full ${isAuthor ? 'bg-gray-200 text-gray-700' : 'bg-green-200 text-green-800'}`}>
                                 {isAuthor ? 'Author' : 'Signed'}
                             </span>
-                        ) : (
+                        ) : (handleSignPetition &&
                                 <button onClick={() => handleSignPetition(petition._id)} className="bg-blue-50 font-semibold px-3 py-1 rounded-full hover:bg-blue-200 text-xs cursor-pointer">Sign Petition</button>
                         )}
                     </div>
