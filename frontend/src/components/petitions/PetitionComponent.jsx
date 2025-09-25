@@ -99,7 +99,7 @@ export default function PetitionComponent({ petition, user, handleSignPetition, 
                                 {isAuthor ? 'Author' : 'Signed'}
                             </span>
                         ) : (
-                                <button onClick={() => { handleSignPetition(petition._id); console.log(petition) }} className="bg-blue-50 font-semibold px-3 py-1 rounded-full hover:bg-blue-200 text-xs cursor-pointer">Sign Petition</button>
+                                <button onClick={() => handleSignPetition(petition._id)} className="bg-blue-50 font-semibold px-3 py-1 rounded-full hover:bg-blue-200 text-xs cursor-pointer">Sign Petition</button>
                         )}
                     </div>
                 </div>

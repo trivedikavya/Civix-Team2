@@ -78,7 +78,9 @@ function Petitions() {
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.msg || 'Failed to sign petition.');
-            setPetitions(petitions.map(p => p._id === petitionId ? { ...p, signatures: data } : p));
+            setPetitions(petitions.map(p =>
+                p._id === petitionId ? data : p
+            ));
         } catch (error) {
             alert(error.message);
         }

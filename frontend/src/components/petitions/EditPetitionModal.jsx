@@ -56,8 +56,8 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl relative max-h-full overflow-y-auto">
+        <div className="fixed inset-0 backdrop-blur-xs z-50 flex justify-center items-center p-4">
+            <div className="relative bg-white border-black rounded-lg shadow-xl p-8 w-full max-w-2xl max-h-full overflow-y-auto">
                 <button onClick={onClose} className="absolute top-4 right-4 px-2 pb-1 transition text-gray-400 hover:text-white rounded-md hover:bg-red-600 text-3xl font-light">&times;</button>
                 <div className="flex items-center mb-4">
                     <div className="bg-blue-100 text-blue-600 rounded-lg p-3">
