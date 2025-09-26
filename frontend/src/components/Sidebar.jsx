@@ -12,9 +12,8 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                        hover:text-orange-700`}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-house mr-2"></i>
                     Home
@@ -22,10 +21,8 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/petitions"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                        hover:text-orange-700`
-                    }
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-regular fa-file-zipper mr-2"></i>
                     Petitions
@@ -33,9 +30,8 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/polls"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                        hover:text-orange-700`}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-square-poll-vertical mr-2"></i>
                     Polls
@@ -43,9 +39,8 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/Reports"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                        hover:text-orange-700`}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-signal mr-2"></i>
                     Reports
@@ -53,9 +48,8 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/Oficials"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                        hover:text-orange-700`}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa fa-user mr-2" ></i>
                     Officials</NavLink>
@@ -63,9 +57,8 @@ function Sidebar({ navClick, setNavClick }) {
                     <NavLink
                         to="/Sitting"
                         className={({ isActive }) =>
-                            `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                            border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                            hover:text-orange-700`}
+                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                         onClick={() => setNavClick(false)}
                     >
                         <i className="fa-solid fa-gear mr-2"></i>
@@ -73,15 +66,14 @@ function Sidebar({ navClick, setNavClick }) {
                     <NavLink
                         to="/Help_&_Support"
                         className={({ isActive }) =>
-                            `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
-                            border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
-                            hover:text-orange-700`}
+                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
+                        hover:text-orange-700 hover:shadow-2xl`}
                         onClick={() => setNavClick(false)}>
                         <i className="fa-regular fa-circle-question mr-1"></i>
                         Help & Support</NavLink>
                     <NavLink
                         to="#"
-                        className="block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl bg-orange-100 text-red-800 hover:bg-orange-400 hover:text-black items-center"
+                        className="block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl bg-orange-100 text-red-700 hover:bg-orange-300 hover:text-black items-center"
                         onClick={logout}>
                         <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
                         Logout

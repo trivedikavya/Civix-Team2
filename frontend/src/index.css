@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Serif:wght@400;700&display=swap');
 @import "tailwindcss";
-
+.font-inria {
+  font-family: 'Inria Serif', serif;
+}
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
