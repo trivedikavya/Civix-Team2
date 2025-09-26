@@ -87,7 +87,21 @@ const loginUser = async (req, res) => {
   }
 };
 
+// ADDED FUNCTION
+const getLoggedInUser = async (req, res) => {
+  try {
+    // req.user.id is coming from the auth middleware
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+
 module.exports = {
   registerUser,
   loginUser,
+  getLoggedInUser, // EXPORT NEW FUNCTION
 };

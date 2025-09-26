@@ -1,58 +1,95 @@
-import React from 'react'
-import { Home, Edit, Vote, Users, BarChart3, Settings, HelpCircle, X } from 'lucide-react';
-import UserProfile from './UserProfile';
-import NavItem from './NavItem';
+// File: frontend/src/components/Sidebar.jsx
 
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-
-function Sidebar({ isOpen, onClose }) {
-  return (
-    <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-      
-      {/* Sidebar */}
-      <aside className={`
-        fixed lg:static inset-y-0 left-0 z-30
-        w-64 bg-white border-r border-gray-200
-        transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
-        lg:translate-x-0 transition-transform duration-200 ease-in-out
-        flex flex-col
-      `}>
-        {/* Mobile Close Button */}
-        <div className="lg:hidden flex justify-end p-4">
-          <button 
-            onClick={onClose}
-            className="p-2 rounded-md hover:bg-gray-100"
-          >
-            <X className="w-5 h-5 text-gray-600" />
-          </button>
+function Sidebar({ navClick, setNavClick }) {
+    const { logout } = useAuth();
+    return (
+        <div
+            className={`fixed top-17 left-0 h-[calc(100vh-64px)] bg-gray-100 font-bold px-4 py-6 shadow-md z-50 transform transition-transform duration-500 ease-in-out ${navClick ? "translate-x-0" : "translate-x-[-100%]"} md:translate-x-0`} >
+            <div className="flex flex-col h-full">
+                <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                        hover:text-orange-700`}
+                    onClick={() => setNavClick(false)}>
+                    <i className="fa-solid fa-house mr-2"></i>
+                    Home
+                </NavLink>
+                <NavLink
+                    to="/petitions"
+                    className={({ isActive }) =>
+                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                        hover:text-orange-700`
+                    }
+                    onClick={() => setNavClick(false)}>
+                    <i className="fa-regular fa-file-zipper mr-2"></i>
+                    Petitions
+                </NavLink>
+                <NavLink
+                    to="/polls"
+                    className={({ isActive }) =>
+                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                        hover:text-orange-700`}
+                    onClick={() => setNavClick(false)}>
+                    <i className="fa-solid fa-square-poll-vertical mr-2"></i>
+                    Polls
+                </NavLink>
+                <NavLink
+                    to="/Reports"
+                    className={({ isActive }) =>
+                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                        hover:text-orange-700`}
+                    onClick={() => setNavClick(false)}>
+                    <i className="fa-solid fa-signal mr-2"></i>
+                    Reports
+                </NavLink>
+                <NavLink
+                    to="/Oficials"
+                    className={({ isActive }) =>
+                        `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                        border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                        hover:text-orange-700`}
+                    onClick={() => setNavClick(false)}>
+                    <i className="fa fa-user mr-2" ></i>
+                    Officials</NavLink>
+                <div className="mt-auto">
+                    <NavLink
+                        to="/Sitting"
+                        className={({ isActive }) =>
+                            `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                            border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                            hover:text-orange-700`}
+                        onClick={() => setNavClick(false)}
+                    >
+                        <i className="fa-solid fa-gear mr-2"></i>
+                        Sitting</NavLink>
+                    <NavLink
+                        to="/Help_&_Support"
+                        className={({ isActive }) =>
+                            `block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl 
+                            border-t-white bg-white ${isActive ? "text-orange-500" : "text-gray-700"} 
+                            hover:text-orange-700`}
+                        onClick={() => setNavClick(false)}>
+                        <i className="fa-regular fa-circle-question mr-1"></i>
+                        Help & Support</NavLink>
+                    <NavLink
+                        to="#"
+                        className="block border-b-2 border-r-2 shadow-lg my-1.5 p-2 px-4 rounded-xl bg-orange-100 text-red-800 hover:bg-orange-400 hover:text-black items-center"
+                        onClick={logout}>
+                        <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
+                        Logout
+                    </NavLink>
+                </div>
+            </div>
         </div>
+    );
+}
 
-        <UserProfile />
-        
-        <nav className="p-4 flex-1 overflow-y-auto">
-          <ul className="space-y-2">
-            <NavItem icon={Home} label="Dashboard" isActive={true} />
-            <NavItem icon={Edit} label="Petitions" />
-            <NavItem icon={Vote} label="Polls" />
-            <NavItem icon={Users} label="Officials" />
-            <NavItem icon={BarChart3} label="Reports" />
-            <NavItem icon={Settings} label="Settings" />
-            <li className="pt-4">
-              <NavItem icon={HelpCircle} label="Help & Support" />
-            </li>
-          </ul>
-        </nav>
-      </aside>
-    </>
-  );
-};
-
-
-export default Sidebar
+export default Sidebar;

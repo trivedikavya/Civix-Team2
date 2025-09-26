@@ -1,28 +1,28 @@
-
-import { useState } from 'react'
-import './App.css'
-import  Welcome from './components/welcome/Welcome'
+import './App.css';
+import Welcome from './components/welcome/Welcome';
 import Header from './components/header';
 import { Outlet } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
-
-
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const [user, setUser] = useState(false);
+    const { user, loading } = useAuth();
 
-  return (
-    <>
-      {/* {(user !== true) ?
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    return (
         <>
-          <Header />
-          <Outlet />
-        </> :
-        <Welcome setUser={ setUser} />} */}
-      
-       <Dashboard />
-    </>
-  )
+            {user ? (
+                <>
+                    <Header />
+                    <Outlet />
+                </>
+            ) : (
+                <Welcome />
+            )}
+        </>
+    );
 }
 
-export default App
+export default App;
