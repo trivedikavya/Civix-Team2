@@ -32,7 +32,7 @@ function Petitions() {
     useEffect(() => {
         const fetchPetitions = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/petitions');
+                const response = await fetch('http://localhost:5001/api/petitions');
                 const data = await response.json();
                 if (response.ok) setPetitions(data);
                 else throw new Error('Failed to fetch petitions');
@@ -72,7 +72,7 @@ function Petitions() {
 
     const handleSignPetition = async (petitionId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/petitions/${petitionId}/sign`, {
+            const response = await fetch(`http://localhost:5001/api/petitions/${petitionId}/sign`, {
                 method: 'POST',
                 headers: { 'x-auth-token': token }
             });
@@ -89,7 +89,7 @@ function Petitions() {
     const handleDeletePetition = async (petitionId) => {
         if (window.confirm('Are you sure you want to delete this petition?')) {
             try {
-                const response = await fetch(`http://localhost:5000/api/petitions/${petitionId}`, {
+                const response = await fetch(`http://localhost:5001/api/petitions/${petitionId}`, {
                     method: 'DELETE',
                     headers: { 'x-auth-token': token }
                 });
@@ -104,7 +104,7 @@ function Petitions() {
 
     const handleChangePetitionStatus = async (petition, petitionStatus) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/petitions/${petition._id}/status`, {
+            const response = await fetch(`http://localhost:5001/api/petitions/${petition._id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
