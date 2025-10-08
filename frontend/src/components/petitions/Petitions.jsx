@@ -24,7 +24,7 @@ function Petitions() {
     const [activeTab, setActiveTab] = useState('all');
     const [petitions, setPetitions] = useState([]);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [petitionToEdit, setPetitionToEdit] = useState(null);

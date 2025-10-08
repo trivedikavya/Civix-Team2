@@ -47,7 +47,7 @@ const CreatePollModal = ({ isOpen, onClose, onPollCreated, cities }) => {
                     options: formData.options.filter(opt => opt.trim()),
                     targetLocation: formData.location,
                     description: formData.description || '',
-                    date: formData.date || ''
+                    closedAt: formData.date || ''
                 }),
             });
 

@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext'; // 1. Import the useAuth hook
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import PetitionComponent from './petitions/PetitionComponent';
 
 function Home() {
@@ -30,7 +30,7 @@ function Home() {
     useEffect(() => {
         const fetchPetitions = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/petitions');
+                const response = await fetch('http://localhost:5001/api/petitions');
                 const data = await response.json();
                 if (response.ok) setPetitions(data);
                 else throw new Error('Failed to fetch petitions');

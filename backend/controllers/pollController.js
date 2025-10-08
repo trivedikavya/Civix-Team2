@@ -16,7 +16,7 @@ exports.getPolls = async (req, res) => {
 
 // Create a new poll
 exports.createPoll = async (req, res) => {
-  const { title, options, targetLocation } = req.body;
+  const { title, options, targetLocation, closedAt } = req.body;
 
   try {
     const newPoll = new Poll({
@@ -25,6 +25,8 @@ exports.createPoll = async (req, res) => {
       createdBy: req.user.id,
       targetLocation,
     });
+    
+    if (closedAt) newPoll.closedAt = closedAt;
 
     const poll = await newPoll.save();
     const populatedPoll = await Poll.findById(poll._id).populate('createdBy', 'name');

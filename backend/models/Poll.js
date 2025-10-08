@@ -31,6 +31,10 @@ const PollSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  closedAt: {
+    type: Date,
+    default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Default to one week from creation
+  },
 });
 
 module.exports = mongoose.model('poll', PollSchema);
