@@ -1,9 +1,9 @@
 import { useAuth } from '../context/AuthContext'; // 1. Import the useAuth hook
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import PetitionComponent from './petitions/PetitionComponent';
 
 function Home() {
-    const { user } = useAuth(); // 2. Get the user object from the context
+    const { user, token } = useAuth(); // 2. Get the user object from the context
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
     const cities = [
         'All locations',
@@ -19,6 +19,7 @@ function Home() {
     const [selectedCity, setSelectedCity] = useState(cities[0] || "");
     const [loading, setLoading] = useState(true);
     const [petitions, setPetitions] = useState([]);
+    const [userPoll, setUserPoll] = useState(null);
     const [myPetitions, setMyPetitions] = useState(0);
     const [SuccessfulPetitions, setSuccessfulPetitions] = useState(0);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
@@ -30,7 +31,7 @@ function Home() {
     useEffect(() => {
         const fetchPetitions = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/petitions');
+                const response = await fetch('http://localhost:5001/api/petitions');
                 const data = await response.json();
                 if (response.ok) setPetitions(data);
                 else throw new Error('Failed to fetch petitions');
@@ -42,6 +43,22 @@ function Home() {
         };
         fetchPetitions();
     }, []);
+
+    useEffect(() => {
+        const fetchPoll = async () => {
+            try {
+                const response = await fetch(`http://localhost:5001/api/auth/user/polls`, {
+                    headers: { 'x-auth-token': token },
+                });
+                const data = await response.json();
+                if (response.ok) setUserPoll(data);
+                else throw new Error('Failed to fetch petitions');
+            } catch (error) {
+                console.error("Fetch petitions error:", error);
+            }
+        };
+        fetchPoll();
+    },[token]);
 
     useEffect(() => {
         if (user) {
@@ -96,7 +113,7 @@ function Home() {
 
                 <div className="bg-white rounded-lg shadow p-4 text-center">
                     <p className="text-gray-700 font-bold">Polls Created</p>
-                    <h2 className="text-2xl font-bold">{ user.pollsCount || 0}</h2>
+                    <h2 className="text-2xl font-bold">{userPoll?.totalUserPoll || 0}</h2>
                     <p className="text-gray-500">Polls Created</p>
                 </div>
             </div>
