@@ -1,3 +1,5 @@
+// File: frontend/src/components/polls/PollCard.jsx
+
 import EditPoll from "./EditPoll";
 import { useState } from "react";
 
@@ -16,12 +18,16 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
             <EditPoll isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} poll={poll} handleEdit={handleEdit} />
             <div className="bg-[#a8e6f4] border border-gray-200 rounded-3xl shadow-sm p-5 flex flex-col w-full justify-between hover:shadow-lg hover:shadow-gray-400 hover:border-gray-600 transition-transform hover:scale-102 scale-100 duration-200">
 
-                <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-600 font-semibold mb-2">
-                        Posted by {isAuthor ? "You" : authorName}
+                {/* TOP ROW: Location (Left) and Icons (Right) */}
+                <div className="flex justify-between items-start mb-2">
+                    {/* Location - TOP LEFT */}
+                    <p className="text-xs text-gray-700 font-medium bg-gray-100 px-2 py-0.5 rounded-full border border-gray-300">
+                        <i className="fa-solid fa-location-dot mr-1"></i>
+                        {poll.targetLocation}
                     </p>
-
-                    <div className="flex items-center space-x-3">
+                    
+                    {/* Icons - TOP RIGHT */}
+                    <div className="flex space-x-3 h-6">
                         {/* Check icon with tooltip */}
                         {userVote && (
                             <div className="relative group">
@@ -34,17 +40,22 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                             </div>
                         )}
                         {isAuthor && handleDeletePoll && (<>
-                             <button onClick={() => setEditModalOpen(true)} className="text-gray-600 hover:text-blue-600 cursor-pointer">
+                             {/* STANDARDIZED EDIT BUTTON CLASSES */}
+                             <button 
+                                onClick={() => setEditModalOpen(true)} 
+                                className="text-gray-600 p-1.5 rounded-full hover:text-blue-600 hover:bg-white cursor-pointer"
+                             >
                                     <i className="fa-solid fa-pencil"></i>
                                 </button>
                             <div className="relative group">
                                
+                                {/* STANDARDIZED DELETE BUTTON CLASSES (removed p-2, text-lg) */}
                                 <button
                                     onClick={() => handleDeletePoll(poll._id)}
-                                    className="text-red-500 hover:text-red-700
-                 transition-all duration-200 transform hover:scale-110  cursor-pointer p-2"
+                                    className="text-red-500 p-1.5 rounded-full hover:text-red-700 hover:bg-white
+                                        transition-all duration-200 transform hover:scale-110  cursor-pointer"
                                 >
-                                    <i className="fa-solid fa-trash text-lg"></i>
+                                    <i className="fa-solid fa-trash"></i>
                                 </button>
 
                                 {/* Tooltip */}
@@ -59,7 +70,14 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                     </div>
                 </div>
 
-                <h3 className="font-bold text-xl text-gray-800">{poll.title}</h3>
+
+                {/* Title and Author */}
+                <h3 className="font-bold text-2xl text-gray-800">{poll.title}</h3>
+                <p className="text-sm text-gray-600 font-medium mb-4">
+                    by <span className="font-semibold">{isAuthor ? "You" : authorName}</span>
+                </p>
+
+
                 {poll.description && <p className="text-gray-600 mt-2 text-sm">{poll.description}</p>}
 
                 <div className="space-y-3 mt-4">
@@ -69,9 +87,9 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                         return (
                             <div key={index}>
                                 {isClosed || userVote ? (
-                                    <div className="relative rounded-2xl p-2 bg-white overflow-hidden">
+                                    <div className="relative rounded-2xl p-2 bg-white overflow-hidden border border-gray-300">
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-gray-400/80 rounded-2xl"
+                                            className="absolute top-0 left-0 h-full bg-blue-600/80 rounded-2xl"
                                             style={{ width: `${percentage}%`, transition: 'width 0.5s ease-in-out' }}
 
                                         ></div>
@@ -83,10 +101,10 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                                 ) : (
                                     <button
                                         onClick={() => handleVote(poll._id, index)}
-                                        className="relative rounded-2xl p-2 bg-white overflow-hidden w-full cursor-pointer"
+                                        className="relative rounded-2xl p-2 bg-white overflow-hidden w-full cursor-pointer hover:shadow-md hover:bg-gray-50 border border-gray-300"
                                     >
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-gray-400/80 rounded-2xl"
+                                            className="absolute top-0 left-0 h-full bg-blue-600/80 rounded-2xl"
                                             style={{ width: `${percentage}%`, transition: 'width 1s ease-in-out' }}
 
                                         ></div>
@@ -100,12 +118,16 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                         );
                     })}
                 </div>
-                <div className="flex justify-between font-semibold text-sm mt-4">
-                    <div className="flex flex-col">
-                        {/* Closing date */}
-                        <span className="text-gray-700">
-                            {new Date(poll.closedAt) >= new Date() ? "🟢 " : "🔴 "}
-                            Closing Date:{" "}
+                
+                {/* Improved Footer */}
+                <div className="flex justify-between items-center text-sm mt-4 pt-3 border-t border-gray-300">
+                    <p className="font-bold text-gray-800">{totalVotes} votes</p>
+                    <div className="flex flex-col items-end">
+                        <span className={`font-semibold ${isClosed ? "text-red-700" : "text-green-700"}`}>
+                            {isClosed ? "🔴 Closed" : "🟢 Active"}
+                        </span>
+                        <span className="text-gray-600 text-xs mt-0.5">
+                            Closes:{" "}
                             {new Date(poll.closedAt).toLocaleDateString("en-IN", {
                                 year: "numeric",
                                 month: "short",
@@ -113,7 +135,6 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                             })}
                         </span>
                     </div>
-                    <p className=" text-gray-500">{totalVotes} votes</p>
                 </div>
             </div>
         </>
