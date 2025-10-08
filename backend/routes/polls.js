@@ -6,6 +6,7 @@ const {
   createPoll,
   votePoll,
   deletePoll,
+  editPoll
 } = require('../controllers/pollController');
 
 // @route   GET api/polls
@@ -27,5 +28,10 @@ router.post('/:id/vote', auth, votePoll);
 // @desc    Delete a poll
 // @access  Private (Creator or official)
 router.delete('/:id', auth, deletePoll);
+
+// @route   PUT api/polls/:id
+// @desc    Update a polls
+// @access  Private
+router.put('/:id', auth, editPoll);
 
 module.exports = router;

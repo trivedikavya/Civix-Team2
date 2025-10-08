@@ -1,7 +1,7 @@
 import EditPoll from "./EditPoll";
 import { useState } from "react";
 
-const PollCard = ({ poll, user, handleVote, handleDeletePoll }) => {
+const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
 
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const isAuthor = poll.createdBy._id === user._id || poll.createdBy === user._id;
@@ -13,7 +13,7 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll }) => {
 
     return (
         <>
-            <EditPoll isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} poll={poll} />
+            <EditPoll isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} poll={poll} handleEdit={handleEdit} />
             <div className="bg-[#a8e6f4] border border-gray-200 rounded-3xl shadow-sm p-5 flex flex-col w-full justify-between hover:shadow-lg hover:shadow-gray-400 hover:border-gray-600 transition-transform hover:scale-102 scale-100 duration-200">
 
                 <div className="flex justify-between items-center">

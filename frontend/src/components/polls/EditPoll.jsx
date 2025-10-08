@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const EditPoll = ({ isOpen, onClose, poll }) => {
+const EditPoll = ({ isOpen, onClose, poll, handleEdit }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [options, setOptions] = useState([]);
@@ -15,7 +15,7 @@ const EditPoll = ({ isOpen, onClose, poll }) => {
         }
     }, [poll]);
 
-    if (!isOpen) return null; 
+    if (!isOpen) return null;
 
     const handleOptionChange = (index, value) => {
         const updated = [...options];
@@ -23,8 +23,35 @@ const EditPoll = ({ isOpen, onClose, poll }) => {
         setOptions(updated);
     };
 
+    const addOption = () => {
+        if (options.length < 5) {
+            setOptions([...options, ""]);
+        }
+    };
+
+    const removeOption = (index) => {
+        if (options.length > 2) {
+            setOptions(options.filter((_, i) => i !== index));
+        }
+    };
+
     const handleSave = async () => {
-       
+
+        const updatedOptions = options.map((optText) => {
+            const existing = poll.options.find(o => o.optionText === optText);
+            return existing
+                ? { ...existing, optionText: optText } // preserve existing votes & id
+                : { optionText: optText, votes: 0 };   // new option gets 0 votes
+        });
+        const updatedPoll = {
+            ...poll,
+            title,
+            description,
+            options: updatedOptions,
+            closedAt,
+        };
+        await handleEdit(updatedPoll)
+        onClose();
     };
 
     return (
@@ -49,14 +76,36 @@ const EditPoll = ({ isOpen, onClose, poll }) => {
                 />
 
                 <label className="block mb-2 font-semibold text-sm">Options</label>
+                <p className="text-xs text-gray-500 mb-3">Add at least 2 options, up to a maximum of 5.</p>
+
                 {options.map((opt, index) => (
-                    <input
-                        key={index}
-                        value={opt}
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                        className="w-full border rounded-lg p-2 mb-2"
-                    />
+                    <div key={index} className="flex items-center mb-2">
+                        <input
+                            value={opt}
+                            onChange={(e) => handleOptionChange(index, e.target.value)}
+                            className="w-full border rounded-lg p-2"
+                            placeholder={`Option ${index + 1}`}
+                        />
+                        {options.length > 2 && (
+                            <button
+                                type="button"
+                                onClick={() => removeOption(index)}
+                                className="ml-2 px-2 text-red-500 hover:bg-red-500 hover:text-white transition rounded-xs text-2xl font-light cursor-pointer">
+                                &times;
+                            </button>
+                        )}
+                    </div>
                 ))}
+
+                {options.length < 5 && (
+                    <button
+                        type="button"
+                        onClick={addOption}
+                        className="text-blue-600 font-semibold text-sm cursor-pointer mb-4"
+                    >
+                        + Add Option
+                    </button>
+                )}
 
                 <label className="block mb-2 font-semibold text-sm">Closing Date</label>
                 <input

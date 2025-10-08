@@ -98,6 +98,26 @@ function Polls() {
         }
     };
 
+    const handleEdit = async (updatedPoll) => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/polls/${updatedPoll._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+                body: JSON.stringify({
+                    title: updatedPoll.title,
+                    description: updatedPoll.description,
+                    options: updatedPoll.options,
+                    closedAt: updatedPoll.closedAt
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || 'Failed to update poll.');
+            setPolls(polls.map(p => p._id === updatedPoll._id ? data : p));
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
     const handlePollCreated = (newPoll) => {
         const populatedPoll = { 
             ...newPoll, 
@@ -164,7 +184,7 @@ function Polls() {
                         ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {filteredPolls.map((poll) => 
-                                    <PollCard key={poll._id} poll={poll} user={user} handleVote={handleVote} handleDeletePoll={handleDeletePoll} />
+                                    <PollCard key={poll._id} poll={poll} user={user} handleVote={handleVote} handleDeletePoll={handleDeletePoll} handleEdit={handleEdit} />
                                 )}
                             </div>
                         )}

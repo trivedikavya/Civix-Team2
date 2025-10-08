@@ -85,3 +85,35 @@ exports.deletePoll = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+
+exports.editPoll = async (req, res) => {
+  const { title, description, options, closedAt } = req.body;
+  try {
+    let poll = await Poll.findById(req.params.id);
+    if (!poll) return res.status(404).json({ msg: 'Poll not found' });
+
+    const user = await User.findById(req.user.id);
+    if (poll.createdBy.toString() !== req.user.id && user.role !== 'official') {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    // Update fields
+    if (title) poll.title = title;
+    if (description) poll.description = description;
+    if (options && options.length >= 2 && options.length <= 5) {
+      poll.options = options.map((opt) => ({
+        optionText: typeof opt === 'string' ? opt : opt.optionText,
+        votes: typeof opt === 'string' ? 0 : opt.votes || 0, }));
+      poll.voters = []; // Reset voters on options change
+    }
+    if (closedAt) poll.closedAt = closedAt;
+
+    await poll.save();
+    const updatedPoll = await Poll.findById(req.params.id).populate('createdBy', 'name');
+    res.json(updatedPoll);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+}
