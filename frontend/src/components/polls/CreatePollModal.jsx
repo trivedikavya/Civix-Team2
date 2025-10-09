@@ -32,18 +32,32 @@ const CreatePollModal = ({ isOpen, onClose, onPollCreated, cities }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
         if (!formData.question || formData.options.some(opt => !opt.trim())) {
             setError('Please provide a question and fill all option fields.');
             return;
         }
+
         try {
-            const response = await fetch('http://localhost:5000/api/polls', {
+            const response = await fetch('http://localhost:5001/api/polls', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-                body: JSON.stringify({ ...formData, options: formData.options.filter(opt => opt.trim()) }),
+                body: JSON.stringify({
+                    title: formData.question,
+                    options: formData.options.filter(opt => opt.trim()),
+                    targetLocation: formData.location,
+                    description: formData.description || '',
+                    closedAt: formData.date || ''
+                }),
             });
-            const data = await response.json();
+
+            const text = await response.text();
+            let data;
+            try { data = JSON.parse(text); } 
+            catch { throw new Error(text || 'Server returned an invalid response'); }
+
             if (!response.ok) throw new Error(data.msg || 'Failed to create poll.');
+
             onPollCreated(data);
             setFormData(initialState);
             onClose();
@@ -116,3 +130,4 @@ const CreatePollModal = ({ isOpen, onClose, onPollCreated, cities }) => {
 };
 
 export default CreatePollModal;
+

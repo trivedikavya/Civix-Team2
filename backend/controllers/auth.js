@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Poll = require('../models/Poll');
 
 const registerUser = async (req, res) => {
   const { name, email, password, location, role } = req.body;
@@ -100,8 +101,19 @@ const getLoggedInUser = async (req, res) => {
 };
 
 
+const getUserPolls = async (req, res) => {
+  try {
+    const polls = await Poll.find({ createdBy: req.user.id }).populate('createdBy', 'name');
+    res.json({totalUserPoll: polls.length });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
-  getLoggedInUser, // EXPORT NEW FUNCTION
+  getLoggedInUser,
+  getUserPolls,  // EXPORT NEW FUNCTION
 };

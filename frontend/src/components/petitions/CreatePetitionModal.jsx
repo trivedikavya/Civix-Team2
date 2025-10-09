@@ -28,7 +28,7 @@ export const CreatePetitionModal = ({ isOpen, onClose, onPetitionCreated }) => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:5000/api/petitions', {
+            const response = await fetch('http://localhost:5001/api/petitions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
                 body: JSON.stringify(formData),
