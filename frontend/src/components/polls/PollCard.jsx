@@ -89,7 +89,7 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                                 {isClosed || userVote ? (
                                     <div className="relative rounded-2xl p-2 bg-white overflow-hidden border border-gray-300">
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-blue-600/80 rounded-2xl"
+                                            className="absolute top-0 left-0 h-full bg-green-400/80 rounded-2xl"
                                             style={{ width: `${percentage}%`, transition: 'width 0.5s ease-in-out' }}
 
                                         ></div>
@@ -104,7 +104,7 @@ const PollCard = ({ poll, user, handleVote, handleDeletePoll, handleEdit }) => {
                                         className="relative rounded-2xl p-2 bg-white overflow-hidden w-full cursor-pointer hover:shadow-md hover:bg-gray-50 border border-gray-300"
                                     >
                                         <div
-                                            className="absolute top-0 left-0 h-full bg-blue-600/80 rounded-2xl"
+                                            className="absolute top-0 left-0 h-full bg-green-400/80 rounded-2xl"
                                             style={{ width: `${percentage}%`, transition: 'width 1s ease-in-out' }}
 
                                         ></div>
