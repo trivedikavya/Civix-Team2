@@ -130,4 +130,3 @@ const CreatePollModal = ({ isOpen, onClose, onPollCreated, cities }) => {
 };
 
 export default CreatePollModal;
-

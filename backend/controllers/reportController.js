@@ -39,6 +39,19 @@ exports.getCommunityReport = async (req, res) => {
 
     // --- Poll Breakdown ---
     const pollLocations = await getAggregateData(Poll, 'targetLocation');
+    const pollStatus = await Poll.aggregate([
+        {
+            $group: {
+                _id: {
+                    $cond: [{ $gte: ['$closedAt', new Date()] }, 'Active', 'Closed']
+                },
+                count: { $sum: 1 }
+            }
+        }
+    ]).then(result => result.reduce((acc, item) => {
+        acc[item._id] = item.count;
+        return acc;
+    }, {}));
 
     res.json({
       communityOverview: {
@@ -55,6 +68,7 @@ exports.getCommunityReport = async (req, res) => {
       },
       pollAnalytics: {
         locations: pollLocations,
+        status: pollStatus,
       }
     });
 
