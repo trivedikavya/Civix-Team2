@@ -89,27 +89,6 @@ function Reports() {
     const petitionAnl = communityData?.petitionAnalytics;
     const pollAnl = communityData?.pollAnalytics;
 
-    const engagementData = {
-        labels: ['Petitions', 'Polls', 'Users'],
-        datasets: [
-            {
-                label: 'Total',
-                data: [comm?.totalPetitions, comm?.totalPolls, comm?.totalUsers],
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.7)',
-                    'rgba(16, 185, 129, 0.7)',
-                    'rgba(139, 92, 246, 0.7)',
-                ],
-                borderColor: [
-                    'rgba(59, 130, 246, 1)',
-                    'rgba(16, 185, 129, 1)',
-                    'rgba(139, 92, 246, 1)',
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
-
     const petitionStatusData = {
         labels: Object.keys(petitionAnl?.status || {}),
         datasets: [
@@ -228,11 +207,7 @@ function Reports() {
                         {/* Petition Analytics */}
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Petition Analytics</h2>
-                            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                                <div className="bg-white p-5 rounded-xl shadow-md">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Engagement Overview</h3>
-                                    <Bar data={engagementData} />
-                                </div>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                                 <div className="bg-white p-5 rounded-xl shadow-md">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
                                     <Doughnut data={petitionStatusData} />

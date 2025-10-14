@@ -26,7 +26,7 @@ export default function Header() {
                     </Link>
                 </div>
 
-                <div className="hidden md:flex flex-row w-1/2 font-bold text-md ">
+                <div className="hidden md:flex flex-grow justify-center font-bold text-md">
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
