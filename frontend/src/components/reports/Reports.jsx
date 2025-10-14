@@ -160,6 +160,44 @@ function Reports() {
         ],
     };
 
+    const pollStatusData = {
+        labels: Object.keys(pollAnl?.status || {}),
+        datasets: [
+            {
+                label: 'Poll Status',
+                data: Object.values(pollAnl?.status || {}),
+                backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(239, 68, 68, 0.7)'],
+                borderColor: ['rgba(16, 185, 129, 1)', 'rgba(239, 68, 68, 1)'],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const pollLocationData = {
+        labels: Object.keys(pollAnl?.locations || {}),
+        datasets: [
+            {
+                label: 'Polls by Location',
+                data: Object.values(pollAnl?.locations || {}),
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(249, 115, 22, 0.7)',
+                    'rgba(139, 92, 246, 0.7)',
+                    'rgba(217, 70, 239, 0.7)',
+                    'rgba(22, 163, 74, 0.7)',
+                ],
+                borderColor: [
+                    'rgba(59, 130, 246, 1)',
+                    'rgba(249, 115, 22, 1)',
+                    'rgba(139, 92, 246, 1)',
+                    'rgba(217, 70, 239, 1)',
+                    'rgba(22, 163, 74, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
     return (
         <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
             <div className='pl-6 pt-6'>
@@ -186,18 +224,39 @@ function Reports() {
 
                 {/* Content for Community Overview */}
                 {activeTab === 'community' && comm && (
-                    <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                        <div className="bg-white p-5 rounded-xl shadow-md">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Engagement Overview</h3>
-                            <Bar data={engagementData} />
+                    <div className='space-y-6'>
+                        {/* Petition Analytics */}
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-700 mb-4">Petition Analytics</h2>
+                            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Engagement Overview</h3>
+                                    <Bar data={engagementData} />
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
+                                    <Doughnut data={petitionStatusData} />
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Categories</h3>
+                                    <Pie data={petitionCategoryData} />
+                                </div>
+                            </div>
                         </div>
-                        <div className="bg-white p-5 rounded-xl shadow-md">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
-                            <Doughnut data={petitionStatusData} />
-                        </div>
-                        <div className="bg-white p-5 rounded-xl shadow-md">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Categories</h3>
-                            <Pie data={petitionCategoryData} />
+
+                        {/* Poll Analytics */}
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-700 mb-4">Poll Analytics</h2>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Poll Status</h3>
+                                    <Doughnut data={pollStatusData} />
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Polls by Location</h3>
+                                    <Pie data={pollLocationData} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
