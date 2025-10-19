@@ -16,6 +16,11 @@ function Petitions() {
         'Hyderabad, TS',
         'Pune, MH'
     ];
+    const tabs = [
+        { id: "all", label: "All Petitions" },
+        { id: "my", label: "My Petitions" },
+        { id: "signed", label: "Signed by Me" },
+    ];
     const categories = ['All Categories', 'Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
     const [selectedCategoriy, setSelectedCategori] = useState('All Categories');
     const [selectedCity, setSelectedCity] = useState(cities[0] || "");
@@ -28,6 +33,7 @@ function Petitions() {
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [petitionToEdit, setPetitionToEdit] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
         const fetchPetitions = async () => {
@@ -168,24 +174,55 @@ function Petitions() {
                     </div>
 
                     <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200'>
-                        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-                            <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
-                                <button onClick={() => setActiveTab('all')} className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === 'all' ? 'bg-white shadow' : 'text-gray-600'}`}>All Petitions</button>
-                                <button onClick={() => setActiveTab('my')} className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === 'my' ? 'bg-white shadow' : 'text-gray-600'}`}>My Petitions</button>
-                                <button onClick={() => setActiveTab('signed')} className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === 'signed' ? 'bg-white shadow' : 'text-gray-600'}`}>Signed by Me</button>
+                        <div className="flex flex-col sm:flex-row md:max-[890]:flex-col justify-between items-center space-x-2 mb-6">
+                            <div className="hidden min-[452px]:flex sm:max-lg:hidden items-center space-x-1 bg-gray-100 p-1 rounded-lg">
+                                {tabs.map(tap => {
+                                    return (
+                                        <button key={tap.id} onClick={() => setActiveTab(tap.id)} className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === tap.id ? 'bg-white shadow' : 'text-gray-600'}`}>{tap.label}</button>
+                                    )
+                                })}
                             </div>
-                            <div className="flex items-center space-x-2 mt-4 sm:mt-0">
-                                <div className='border border-gray-300 rounded-lg p-2 bg-sky-200'>
+                            {/* --- Mobile View (Dropdown) --- */}
+                            <div className="min-[452px]:max-sm:hidden lg:hidden relative sm:block w-full ml-2">
+                                <button
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="w-full flex justify-between items-center py-2 px-4 border border-gray-300/60 rounded-md bg-gray-100 shadow text-sm font-semibold cursor-pointer">
+                                    {tabs.find((t) => t.id === activeTab)?.label}
+                                    <span className="ml-2 text-gray-500">▼</span>
+                                </button>
+
+                                {dropdownOpen && (
+                                    <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg z-10">
+                                        {tabs.map((tab) => (
+                                            <button
+                                                key={tab.id}
+                                                onClick={() => { setActiveTab(tab.id), setDropdownOpen(false) }}
+                                                className={`block w-full text-left cursor-pointer py-2 px-4 text-sm hover:bg-gray-100 ${activeTab === tab.id ? "font-serif text-black" : "text-gray-600"}`} >
+                                                {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col min-[520px]:flex-row items-center min-[520px]:space-x-2 max-[520px]:space-y-1 max-[520px]:w-full mt-4 sm:mt-0">
+                                <div className="border border-gray-300 rounded-lg p-2 bg-sky-200 flex items-center space-x-2 w-full min-[520px]:w-auto">
                                     <i className="fa-solid fa-location-dot"></i>
                                     <select
                                         value={selectedCity}
-                                        onChange={(e) => setSelectedCity(e.target.value)} className="cursor-pointer text-sm">{cities.map((city, index) => (
-                                            <option key={index} value={city}>{city}</option>
-                                        ))}</select>
+                                        onChange={(e) => setSelectedCity(e.target.value)}
+                                        className="cursor-pointer text-sm bg-transparent outline-none flex-1">
+                                        {cities.map((city, index) => (
+                                            <option key={index} value={city}>
+                                                {city}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <div className='border border-gray-300 rounded-lg p-2 bg-sky-200'>
-                                    <i className="fa-solid fa-filter"></i>
-                                    <select className="cursor-pointer text-sm"
+
+                                <div className='border border-gray-300 rounded-lg p-2 bg-sky-200 flex items-center space-x-2 w-full min-[520px]:w-auto'>
+                                    <i className="fa-solid fa-filter w-3"></i>
+                                    <select className="cursor-pointer text-sm bg-transparent outline-none flex-1"
                                         value={selectedCategoriy}
                                         onChange={(e) => setSelectedCategori(e.target.value)}>
                                         {categories.map((category, index) => (
@@ -193,11 +230,13 @@ function Petitions() {
                                         ))}
                                     </select>
                                 </div>
-                                <div className='border border-gray-300 rounded-lg p-2 bg-sky-200'>
+                                <div className='border border-gray-300 rounded-lg p-2 bg-sky-200 flex items-center space-x-2 w-full min-[520px]:w-auto'>
+                                    <i className="fa-solid fa-chart-simple"></i>
                                     status:<select
                                         value={selctedStatus}
                                         onChange={(e) => setSelectedStatus(e.target.value)}
-                                        className="cursor-pointer text-sm"> <option value="All">All</option>
+                                        className="cursor-pointer text-sm bg-transparent outline-none flex-1">
+                                        <option value="All">All</option>
                                         <option value="Active">Active</option>
                                         <option value="Closed">Closed</option></select>
                                 </div>
