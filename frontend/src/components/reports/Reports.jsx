@@ -63,12 +63,12 @@ const useReportData = () => {
 
 // Component to render a simple analytic card (used for metrics)
 const MetricCard = ({ title, value, iconClass, color }) => (
-    <div className="bg-white rounded-xl shadow-md p-5 flex flex-col justify-between border-l-4" style={{ borderColor: color }}>
+    <div className="bg-white rounded-xl shadow-md p-3 flex flex-col justify-between border-l-4" style={{ borderColor: color }}>
         <div className="flex justify-between items-center">
-            <p className="text-sm font-medium text-gray-500">{title}</p>
-            <i className={`${iconClass} text-2xl`} style={{ color: color }}></i>
+            <p className="text-xs font-medium text-gray-500">{title}</p>
+            <i className={`${iconClass} text-xl`} style={{ color: color }}></i>
         </div>
-        <h2 className="text-3xl font-bold text-gray-800 mt-2">{value}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mt-1">{value}</h2>
     </div>
 );
 
@@ -204,15 +204,36 @@ function Reports() {
                 {/* Content for Community Overview */}
                 {activeTab === 'community' && comm && (
                     <div className='space-y-6'>
+                         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
+                            <MetricCard
+                                title="Total Petitions"
+                                value={comm.totalPetitions}
+                                iconClass="fa-solid fa-file-lines"
+                                color="#3b82f6"
+                            />
+                            <MetricCard
+                                title="Total Polls"
+                                value={comm.totalPolls}
+                                iconClass="fa-solid fa-square-poll-vertical"
+                                color="#10b981"
+                            />
+                            <MetricCard
+                                title="Total Users"
+                                value={comm.totalUsers}
+                                iconClass="fa-solid fa-users"
+                                color="#f97316"
+                            />
+                        </div>
+
                         {/* Petition Analytics */}
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Petition Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
                                     <Doughnut data={petitionStatusData} />
                                 </div>
-                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Categories</h3>
                                     <Pie data={petitionCategoryData} />
                                 </div>
@@ -223,11 +244,11 @@ function Reports() {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Poll Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Poll Status</h3>
                                     <Doughnut data={pollStatusData} />
                                 </div>
-                                <div className="bg-white p-5 rounded-xl shadow-md">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Polls by Location</h3>
                                     <Pie data={pollLocationData} />
                                 </div>
