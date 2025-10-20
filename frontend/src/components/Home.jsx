@@ -28,10 +28,12 @@ function Home() {
         setSelectedCity(cities[0] || "");
     }
 
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
     useEffect(() => {
         const fetchPetitions = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/petitions');
+                const response = await fetch(`${API_URL}/api/petitions`);
                 const data = await response.json();
                 if (response.ok) setPetitions(data);
                 else throw new Error('Failed to fetch petitions');
@@ -42,12 +44,12 @@ function Home() {
             }
         };
         fetchPetitions();
-    }, []);
+    }, [API_URL]);
 
     useEffect(() => {
         const fetchPoll = async () => {
             try {
-                const response = await fetch(`http://localhost:5001/api/auth/user/polls`, {
+                const response = await fetch(`${API_URL}/api/auth/user/polls`, {
                     headers: { 'x-auth-token': token },
                 });
                 const data = await response.json();
@@ -58,7 +60,7 @@ function Home() {
             }
         };
         fetchPoll();
-    },[token]);
+    },[token,API_URL]);
 
     useEffect(() => {
         if (user) {
