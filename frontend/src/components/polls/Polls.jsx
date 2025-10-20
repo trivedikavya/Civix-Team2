@@ -30,12 +30,13 @@ function Polls() {
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
     // Fetch polls from backend
     useEffect(() => {
         if (!token) return;
         const fetchPolls = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/polls', {
+                const response = await fetch(`${API_URL}/api/polls`, {
                     headers: { 'x-auth-token': token }
                 });
                 const data = await response.json();
@@ -48,7 +49,7 @@ function Polls() {
             }
         };
         fetchPolls();
-    }, [token]);
+    }, [token, API_URL]);
 
     // Filter polls
     useEffect(() => {
@@ -74,7 +75,7 @@ function Polls() {
     // Handle voting by option index
     const handleVote = async (pollId, optionIndex) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/polls/${pollId}/vote`, {
+            const response = await fetch(`${API_URL}/api/polls/${pollId}/vote`, {
                 method: 'POST', // match backend
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
                 body: JSON.stringify({ optionIndex }) // match backend expected payload
@@ -92,7 +93,7 @@ function Polls() {
     const handleDeletePoll = async (pollId) => {
         if (window.confirm('Are you sure you want to delete this poll ?')) {
             try {
-                const response = await fetch(`http://localhost:5001/api/polls/${pollId}`, {
+                const response = await fetch(`${API_URL}/api/polls/${pollId}`, {
                     method: 'DELETE',
                     headers: { 'x-auth-token': token }
                 });
@@ -107,7 +108,7 @@ function Polls() {
 
     const handleEdit = async (updatedPoll) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/polls/${updatedPoll._id}`, {
+            const response = await fetch(`${API_URL}/api/polls/${updatedPoll._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
                 body: JSON.stringify({
@@ -141,6 +142,7 @@ function Polls() {
                 onClose={() => setCreateModalOpen(false)} 
                 onPollCreated={handlePollCreated} 
                 cities={cities} 
+                API_URL={API_URL}
             />
             <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
                 <div>

@@ -35,10 +35,12 @@ function Petitions() {
     const [petitionToEdit, setPetitionToEdit] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
     useEffect(() => {
         const fetchPetitions = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/petitions');
+                const response = await fetch(`${API_URL}/api/petitions`);
                 const data = await response.json();
                 if (response.ok) setPetitions(data);
                 else throw new Error('Failed to fetch petitions');
@@ -49,7 +51,7 @@ function Petitions() {
             }
         };
         fetchPetitions();
-    }, []);
+    }, [API_URL]);
 
     useEffect(() => {
         if (!user) return;
@@ -78,7 +80,7 @@ function Petitions() {
 
     const handleSignPetition = async (petitionId) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/petitions/${petitionId}/sign`, {
+            const response = await fetch(`${API_URL}/api/petitions/${petitionId}/sign`, {
                 method: 'POST',
                 headers: { 'x-auth-token': token }
             });
@@ -95,7 +97,7 @@ function Petitions() {
     const handleDeletePetition = async (petitionId) => {
         if (window.confirm('Are you sure you want to delete this petition?')) {
             try {
-                const response = await fetch(`http://localhost:5001/api/petitions/${petitionId}`, {
+                const response = await fetch(`${API_URL}/api/petitions/${petitionId}`, {
                     method: 'DELETE',
                     headers: { 'x-auth-token': token }
                 });
@@ -110,7 +112,7 @@ function Petitions() {
 
     const handleChangePetitionStatus = async (petition, petitionStatus) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/petitions/${petition._id}/status`, {
+            const response = await fetch(`${API_URL}/api/petitions/${petition._id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

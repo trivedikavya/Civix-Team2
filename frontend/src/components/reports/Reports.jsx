@@ -5,7 +5,7 @@ import { Pie, Doughnut, Bar } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
-const API_URL = 'http://localhost:5001/api/reports';
+const API_URL = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001') + '/api/reports';
 
 // Custom Hook for fetching report data
 const useReportData = () => {
