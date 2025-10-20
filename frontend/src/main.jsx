@@ -8,6 +8,8 @@ import Home from '/src/components/Home.jsx';
 import Petitions from '/src/components/petitions/Petitions.jsx';
 import Polls from '/src/components/polls/Polls.jsx';
 import Reports from '/src/components/reports/Reports.jsx'; // NEW: Import Reports
+import Settings from '/src/components/settings/Settings.jsx'; // ADDED
+import HelpAndSupport from '/src/components/help/HelpAndSupport.jsx'; // ADDED
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from '/src/context/AuthContext.jsx';
 
@@ -20,6 +22,8 @@ const router = createBrowserRouter([
             { path: 'petitions', element: <Petitions /> },
             { path: 'polls', element: <Polls /> },
             { path: 'reports', element: <Reports /> }, // NEW: Add the route for Reports
+            { path: 'settings', element: <Settings /> }, // ADDED
+            { path: 'help-support', element: <HelpAndSupport /> }, // ADDED
         ],
     },
 ]);
