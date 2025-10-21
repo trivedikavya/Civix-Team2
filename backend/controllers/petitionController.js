@@ -4,7 +4,11 @@ const User = require('../models/User');
 // Get all petitions
 exports.getPetitions = async (req, res) => {
     try {
-        const petitions = await Petition.find().populate('author', 'name').populate('signatures', 'name').sort({ date: -1 });
+        const petitions = await Petition.find()
+            .populate('author', 'name')
+            .populate('signatures', 'name')
+            .populate('comments.user', 'name') // Populate comment user
+            .sort({ date: -1 });
         res.json(petitions);
     } catch (err) {
         console.error(err.message);
@@ -26,7 +30,9 @@ exports.createPetition = async (req, res) => {
         });
 
         const petition = await newPetition.save();
-        const populatedPetition = await Petition.findById(petition._id).populate('author', 'name');
+        const populatedPetition = await Petition.findById(petition._id)
+            .populate('author', 'name')
+            .populate('comments.user', 'name'); // Populate comment user
         res.json(populatedPetition);
     } catch (err) {
         console.error(err.message);
@@ -54,7 +60,10 @@ exports.signPetition = async (req, res) => {
 
         petition.signatures.unshift(req.user.id);
         await petition.save();
-        const finalPetition = await Petition.findById(req.params.id).populate('author', 'name').populate('signatures', 'name');
+        const finalPetition = await Petition.findById(req.params.id)
+            .populate('author', 'name')
+            .populate('signatures', 'name')
+            .populate('comments.user', 'name'); // Populate comment user
         res.json(finalPetition);
     } catch (err) {
         console.error(err.message);
@@ -83,7 +92,13 @@ exports.updatePetition = async (req, res) => {
             { new: true }
         );
 
-        res.json(petition);
+        // Repopulate before sending
+        const populatedPetition = await Petition.findById(petition._id)
+            .populate('author', 'name')
+            .populate('signatures', 'name')
+            .populate('comments.user', 'name');
+
+        res.json(populatedPetition);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -132,9 +147,44 @@ exports.updatePetitionStatus = async (req, res) => {
             req.params.id,
             { $set: { status: req.body.status } },
             { new: true }
-        ).populate('author', 'name').populate('signatures', 'name');
+        ).populate('author', 'name').populate('signatures', 'name').populate('comments.user', 'name'); // Populate comment user
 
         res.json(petition);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Add a new comment to a petition
+exports.addComment = async (req, res) => {
+    const { text } = req.body;
+    if (!text) {
+        return res.status(400).json({ msg: 'Comment text is required' });
+    }
+
+    try {
+        const petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        const newComment = {
+            user: req.user.id,
+            text: text,
+        };
+
+        petition.comments.push(newComment);
+
+        await petition.save();
+
+        // Populate the new comment and return the whole petition
+        const populatedPetition = await Petition.findById(req.params.id)
+            .populate('author', 'name')
+            .populate('signatures', 'name')
+            .populate('comments.user', 'name');
+
+        res.json(populatedPetition);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

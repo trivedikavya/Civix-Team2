@@ -1,6 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// Define a sub-schema for comments
+const CommentSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const PetitionSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
@@ -27,6 +44,8 @@ const PetitionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  // Add comments array using the sub-schema
+  comments: [CommentSchema],
   location: {
     type: String
   },
