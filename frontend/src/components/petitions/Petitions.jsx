@@ -140,13 +140,18 @@ function Petitions() {
         const existing = petitions.find(p => p._id === updatedPetition._id);
         const fixed = {
             ...updatedPetition,
-            author: updatedPetition.author?._id ? updatedPetition.author : existing.author
+            author: updatedPetition.author?._id ? updatedPetition.author : (existing ? existing.author : {}),
+            // Ensure comments are also populated
+            comments: updatedPetition.comments || (existing ? existing.comments : [])
         };
 
         setPetitions(petitions.map(p => (p._id === fixed._id ? fixed : p)));
     };
 
-
+    // NEW HANDLER for when a comment is added
+    const handleCommentAdded = (updatedPetition) => {
+        handlePetitionUpdated(updatedPetition); // The logic is the same: replace the old petition
+    };
 
 
     const handlePetitionCreated = (newPetition) => {
@@ -254,8 +259,17 @@ function Petitions() {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPetitions.map((petition) =>
-                                    <PetitionComponent key={petition._id} petition={petition} user={user} handleSignPetition={handleSignPetition} handleChangePetitionStatus={handleChangePetitionStatus}
-                                        handleDelete={handleDeletePetition} handleEdit={handleOpenEditModal} />
+                                    <PetitionComponent
+                                        key={petition._id}
+                                        petition={petition}
+                                        user={user}
+                                        token={token}
+                                        handleSignPetition={handleSignPetition}
+                                        handleChangePetitionStatus={handleChangePetitionStatus}
+                                        handleDelete={handleDeletePetition}
+                                        handleEdit={handleOpenEditModal}
+                                        handleCommentAdded={handleCommentAdded}
+                                    />
                                 )}
                             </div>
                         )}
