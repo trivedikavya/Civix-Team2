@@ -1,184 +1,253 @@
-// File: frontend/src/components/polls/Polls.jsx
-
-import { useState, useEffect, useMemo } from 'react';
+import CreatePollModal from './CreatePollModal.jsx';
+import PollCard from './PollCard.jsx';
+import { useState, useEffect } from "react";
 import { useAuth } from '/src/context/AuthContext.jsx';
-import { CreatePollModal } from './CreatePollModal';
-import { EditPollModal } from './EditPollModal';
-import PollCard from './PollCard';
 
-// --- Poll Details Modal ---
-const PollDetailsModal = ({ isOpen, onClose, poll, user }) => {
-  if (!isOpen || !poll) return null;
-
-  const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-  const userVote = poll.voters.find(v => v.user === user._id);
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 text-3xl font-light">&times;</button>
-        <h2 className="text-3xl font-bold mb-2">{poll.question}</h2>
-        <div className="flex justify-between items-center text-sm text-gray-500 mb-6 border-b pb-4">
-          <span>Created by: {poll.author.name}</span>
-          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full font-semibold text-xs">
-            {poll.status === 'active' ? 'Active' : 'Closed'}
-          </span>
-        </div>
-        {poll.description && <p className="text-gray-700 mb-4 whitespace-pre-wrap">{poll.description}</p>}
-
-        <div className="space-y-3">
-          {poll.options.map(opt => {
-            const percentage = totalVotes > 0 ? (opt.votes / totalVotes) * 100 : 0;
-            return (
-              <div key={opt._id} className="relative border rounded-lg p-3 bg-gray-50 overflow-hidden">
-                <div className="absolute top-0 left-0 h-full bg-blue-100 rounded-lg" style={{ width: `${percentage}%` }} />
-                <div className="relative flex justify-between font-semibold text-gray-700">
-                  <span className="flex items-center">
-                    {opt.text}
-                    {userVote?.option === opt.text && <span className="text-blue-600 ml-2 text-xs font-bold flex items-center"><i className="fa-solid fa-check mr-1"></i>Your Vote</span>}
-                  </span>
-                  <span className="text-gray-500">{percentage.toFixed(0)}%</span>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-        <p className="text-right text-sm text-gray-500 mt-4">{totalVotes} votes</p>
-      </div>
-    </div>
-  );
-};
-
-// --- Main Polls Component ---
 function Polls() {
-  const { user, token } = useAuth();
-  const tabs = ['active', 'my', 'voted', 'closed'];
-  const [activeTab, setActiveTab] = useState('active');
-  const [polls, setPolls] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
-  const [selectedPoll, setSelectedPoll] = useState(null);
-  const [pollToEdit, setPollToEdit] = useState(null);
+    const cities = [
+        'All locations',
+        'Mumbai, MH',
+        'Delhi, DL',
+        'Bengaluru, KA',
+        'Chennai, TN',
+        'Kolkata, WB',
+        'Hyderabad, TS',
+        'Pune, MH'
+    ];
+    const tabs = [
+        { id: "active", label: "Active Polls" },
+        { id: "voted", label: "Polls I Voted In" },
+        { id: "my", label: "My Polls" },
+        { id: "closed", label: "Closed Polls" },
+    ];
 
-  useEffect(() => {
-    if (!token) return;
-    const fetchPolls = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/polls', { headers: { 'x-auth-token': token } });
-        const data = await response.json();
-        if (response.ok) setPolls(data);
-        else throw new Error('Failed to fetch polls');
-      } catch (error) {
-        console.error('Fetch polls error:', error);
-      } finally {
-        setLoading(false);
-      }
+    const { user, token } = useAuth();
+    const [selectedCity, setSelectedCity] = useState("All locations");
+    const [activeTab, setActiveTab] = useState('active');
+    const [polls, setPolls] = useState([]);
+    const [filteredPolls, setFilteredPolls] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+    // Fetch polls from backend
+    useEffect(() => {
+        if (!token) return;
+        const fetchPolls = async () => {
+            try {
+                const response = await fetch(`${API_URL}/api/polls`, {
+                    headers: { 'x-auth-token': token }
+                });
+                const data = await response.json();
+                if (response.ok) setPolls(data);
+                else throw new Error('Failed to fetch polls');
+            } catch (error) {
+                console.error("Fetch polls error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPolls();
+    }, [token, API_URL]);
+
+    // Filter polls
+    useEffect(() => {
+        if (!user) return;
+        let filtered = [];
+
+        if (activeTab === 'my') {
+            filtered = polls.filter(p => (typeof p.createdBy === 'object' ? p.createdBy._id : p.createdBy) === user._id);
+        } else if (activeTab === 'voted') {
+            filtered = polls.filter(p => p.voters.includes(user._id));
+        } else if (activeTab === 'closed') {
+            filtered = polls.filter(p => new Date(p.closedAt) < new Date());
+        } else { // active
+            filtered = polls.filter(p => new Date(p.closedAt) >= new Date());
+        }
+        if (selectedCity !== 'All locations') {
+            filtered = filtered.filter(p => p.targetLocation === selectedCity);
+        }
+
+        setFilteredPolls(filtered);
+    }, [activeTab, polls, user, selectedCity]);
+
+    // Handle voting by option index
+    const handleVote = async (pollId, optionIndex) => {
+        try {
+            const response = await fetch(`${API_URL}/api/polls/${pollId}/vote`, {
+                method: 'POST', // match backend
+                headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+                body: JSON.stringify({ optionIndex }) // match backend expected payload
+            });
+
+            const updatedPoll = await response.json();
+            if (!response.ok) throw new Error(updatedPoll.msg || 'Failed to vote.');
+            setPolls(polls.map(p => p._id === pollId ? updatedPoll : p));
+        } catch (error) {
+            alert(error.message);
+        }
     };
-    fetchPolls();
-  }, [token]);
 
-  const filteredPolls = useMemo(() => {
-    if (!user) return [];
-    let filtered = [];
-    switch (activeTab) {
-      case 'my':
-        filtered = polls.filter(p => p.author._id === user._id);
-        break;
-      case 'voted':
-        filtered = polls.filter(p => p.voters.some(v => v.user === user._id));
-        break;
-      case 'closed':
-        filtered = polls.filter(p => p.status === 'closed');
-        break;
-      default:
-        filtered = polls.filter(p => p.status === 'active');
+
+    const handleDeletePoll = async (pollId) => {
+        if (window.confirm('Are you sure you want to delete this poll ?')) {
+            try {
+                const response = await fetch(`${API_URL}/api/polls/${pollId}`, {
+                    method: 'DELETE',
+                    headers: { 'x-auth-token': token }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.msg || 'Failed to delete poll.');
+                setPolls(polls.filter(p => p._id !== pollId));
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    };
+
+    const handleEdit = async (updatedPoll) => {
+        try {
+            const response = await fetch(`${API_URL}/api/polls/${updatedPoll._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+                body: JSON.stringify({
+                    title: updatedPoll.title,
+                    description: updatedPoll.description,
+                    options: updatedPoll.options,
+                    closedAt: updatedPoll.closedAt
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || 'Failed to update poll.');
+            setPolls(polls.map(p => p._id === updatedPoll._id ? data : p));
+        } catch (error) {
+            alert(error.message);
+        }
     }
-    return filtered;
-  }, [activeTab, polls, user]);
 
-  const handleVote = async (pollId, optionText) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/polls/${pollId}/vote`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
-        body: JSON.stringify({ optionText })
-      });
-      const updatedPoll = await res.json();
-      if (!res.ok) throw new Error(updatedPoll.msg || 'Failed to vote.');
-      setPolls(prev => prev.map(p => p._id === pollId ? updatedPoll : p));
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+    const handlePollCreated = (newPoll) => {
+        const populatedPoll = { 
+            ...newPoll, 
+            createdBy: { _id: user._id, name: user.name }, 
+            voters: [] 
+        };
+        setPolls(prev => [populatedPoll, ...prev]);
+    };
 
-  const handlePollCreated = (newPoll) => {
-    const populatedPoll = { ...newPoll, author: { _id: user._id, name: user.name } };
-    setPolls(prev => [populatedPoll, ...prev]);
-  };
+    return (
+        <>
+            <CreatePollModal 
+                isOpen={isCreateModalOpen} 
+                onClose={() => setCreateModalOpen(false)} 
+                onPollCreated={handlePollCreated} 
+                cities={cities} 
+                API_URL={API_URL}
+            />
+            <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
+                <div>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pt-6 pl-6">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-800 font-inria">Polls</h1>
+                            <p className="text-gray-700 mt-1 font-bold">Participate in community polls and make your voice heard.</p>
+                        </div>
+                        <button 
+                            onClick={() => setCreateModalOpen(true)} 
+                            className="bg-white text-black font-bold px-5 py-3 rounded-lg hover:bg-blue-300 transition duration-300 mt-4 sm:mt-0 cursor-pointer"
+                        >
+                            + Create Poll
+                        </button>
+                    </div>
 
-  const handleOpenEditModal = (poll) => {
-    setPollToEdit(poll);
-    setEditModalOpen(true);
-  };
+                    <div className='bg-white p-6 rounded-xl shadow-sm border border-gray-200'>
+                        <div className="flex flex-col min-[690px]:flex-row justify-between items-center mb-6">
+                            
+                            <div className="hidden min-[542px]:max-[768px]:flex min-[768px]:hidden min-[890px]:flex items-center space-x-1 bg-gray-100 p-1 rounded-lg justify-center">
+                                {tabs.map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`py-2 px-4 rounded-md font-semibold text-sm cursor-pointer hover:text-black ${activeTab === tab.id ? "bg-white shadow" : "text-gray-600"
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
 
-  const handlePollUpdated = (updatedPoll) => {
-    setPolls(prev => prev.map(p => p._id === updatedPoll._id ? updatedPoll : p));
-  };
+                            {/* --- Mobile + Large Screen (Dropdown View) --- */}
+                            <div className="min-[542px]:max-[768px]:hidden min-[890px]:hidden relative w-full sm:w-40">
+                                <button
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="w-full flex justify-between items-center py-2 px-4 rounded-md border border-gray-300/60 bg-gray-100 shadow text-sm font-semibold cursor-pointer"
+                                >
+                                    {tabs.find((t) => t.id === activeTab)?.label}
+                                    <span className="ml-2 text-gray-500">▼</span>
+                                </button>
 
-  const viewDetails = (poll) => {
-    setSelectedPoll(poll);
-    setDetailsModalOpen(true);
-  };
+                                {dropdownOpen && (
+                                    <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg z-10">
+                                        {tabs.map((tab) => (
+                                            <button
+                                                key={tab.id}
+                                                onClick={() => {
+                                                    setActiveTab(tab.id);
+                                                    setDropdownOpen(false);
+                                                }}
+                                                className={`block w-full text-left py-2 px-4 text-sm hover:bg-gray-100 ${activeTab === tab.id
+                                                        ? "font-semibold text-black"
+                                                        : "text-gray-600"
+                                                    }`}
+                                            >
+                                                {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="border border-gray-300 rounded-lg p-2 bg-sky-200 mt-4 min-[690px]:mt-0 min-w-35 w-full min-[542px]:w-auto flex items-center space-x-2">
+                                <i className="fa-solid fa-location-dot text-gray-700"></i>
+                                <select
+                                    value={selectedCity}
+                                    onChange={(e) => setSelectedCity(e.target.value)}
+                                    className="cursor-pointer text-sm bg-transparent outline-none flex-1"
+                                >
+                                    {cities.map((city, index) => (
+                                        <option key={index} value={city}>
+                                            {city}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
 
-  return (
-    <>
-      <CreatePollModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} onPollCreated={handlePollCreated} />
-      <EditPollModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} poll={pollToEdit} onPollUpdated={handlePollUpdated} />
-      <PollDetailsModal isOpen={isDetailsModalOpen} onClose={() => setDetailsModalOpen(false)} poll={selectedPoll} user={user} />
-
-      <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">Polls</h1>
-              <p className="text-gray-500 mt-1">Create and participate in community polls.</p>
+                        {loading ? (
+                            <p className="text-center py-10 text-gray-500">Loading polls...</p>
+                        ) : filteredPolls.length === 0 ? (
+                            <div className="text-center py-16 bg-gray-50 rounded-lg border-2 border-dashed">
+                                <h3 className="font-semibold text-gray-600">No polls found with the current filters.</h3>
+                                <p className="text-gray-500 mt-2 text-sm">Have a question for your community?</p>
+                                <button 
+                                    onClick={() => setCreateModalOpen(true)} 
+                                    className="mt-4 bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 text-sm"
+                                >
+                                    Create a Poll
+                                </button>
+                            </div>
+                        ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {filteredPolls.map((poll) => 
+                                    <PollCard key={poll._id} poll={poll} user={user} handleVote={handleVote} handleDeletePoll={handleDeletePoll} handleEdit={handleEdit} />
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-            <button onClick={() => setCreateModalOpen(true)} className="bg-blue-600 text-white font-bold px-5 py-3 rounded-lg hover:bg-blue-700 transition duration-300 mt-4 sm:mt-0 whitespace-nowrap">
-              + Create Poll
-            </button>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
-            {tabs.map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)}
-                className={`py-2 px-4 rounded-md font-semibold text-sm ${activeTab === tab ? 'bg-white shadow text-blue-600' : 'text-gray-600'}`}>
-                {tab === 'active' ? 'Active Polls' : tab === 'my' ? 'My Polls' : tab === 'voted' ? 'Polls I Voted In' : 'Closed Polls'}
-              </button>
-            ))}
-          </div>
-
-          {/* Polls */}
-          {loading ? (
-            <p className="text-center py-10 text-gray-500">Loading polls...</p>
-          ) : filteredPolls.length === 0 ? (
-            <div className="text-center py-16 bg-gray-50 rounded-lg border-2 border-dashed">
-              <p className="text-gray-500">No polls found for this filter.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPolls.map(poll => (
-                <PollCard key={poll._id} poll={poll} user={user} handleVote={handleVote} viewDetails={viewDetails} handleEdit={handleOpenEditModal} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
+        </>
+    );
 }
 
 export default Polls;
+
+

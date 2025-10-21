@@ -3,6 +3,16 @@ import { useAuth } from '/src/context/AuthContext.jsx';
 
 export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition }) => {
     const { token } = useAuth();
+    const categories = ['Environment', 'Infrastructure', 'Education', 'Public Safety', 'Transportation', 'Healthcare', 'Housing'];
+    const cities = [
+        'Mumbai, MH',
+        'Delhi, DL',
+        'Bengaluru, KA',
+        'Chennai, TN',
+        'Kolkata, WB',
+        'Hyderabad, TS',
+        'Pune, MH'
+    ];
     const [formData, setFormData] = useState({ title: '', description: '', category: '', signatureGoal: 100, location: '' });
     const [error, setError] = useState('');
 
@@ -21,6 +31,8 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -29,7 +41,7 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
             return;
         }
         try {
-            const response = await fetch(`http://localhost:5000/api/petitions/${petition._id}`, {
+            const response = await fetch(`${API_URL}/api/petitions/${petition._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
                 body: JSON.stringify(formData),
@@ -46,9 +58,9 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl relative">
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 text-3xl font-light">&times;</button>
+        <div className="fixed inset-0 backdrop-blur-xs z-50 flex justify-center items-center p-4">
+            <div className="relative bg-white border-black rounded-lg shadow-xl p-8 w-full max-w-2xl max-h-full overflow-y-auto">
+                <button onClick={onClose} className="absolute top-4 right-4 px-2 pb-1 transition text-gray-400 hover:text-white rounded-md hover:bg-red-600 text-3xl font-light">&times;</button>
                 <div className="flex items-center mb-4">
                     <div className="bg-blue-100 text-blue-600 rounded-lg p-3">
                         <i className="fa-solid fa-pencil fa-lg"></i>
@@ -65,20 +77,22 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
                         <div>
                             <label htmlFor="category" className="block text-sm font-bold text-gray-700 mb-2">Category</label>
                             <select name="category" id="category" value={formData.category} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg bg-white">
-                                <option value="">Select Category</option>
-                                <option value="Environment">Environment</option>
-                                <option value="Infrastructure">Infrastructure</option>
-                                <option value="Education">Education</option>
-                                <option value="Public Safety">Public Safety</option>
+                                {categories.map((cat) => (
+                                    <option key={cat} value={cat === 'Select Categories' ? '' : cat} disabled={cat === 'Select Categories'}>{cat}</option>
+                                ))}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="signatureGoal" className="block text-sm font-bold text-gray-700 mb-2">Signature Goal</label>
-                            <input type="number" name="signatureGoal" id="signatureGoal" value={formData.signatureGoal} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg" />
+                            <input type="number" name="signatureGoal" id="signatureGoal" value={formData.signatureGoal} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg"/>
                         </div>
                         <div>
                             <label htmlFor="location" className="block text-sm font-bold text-gray-700 mb-2">Location</label>
-                            <input type="text" name="location" id="location" value={formData.location} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg" />
+                            <select name="location" id="location" value={formData.location} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg bg-white" >
+                                    {cities.map((city) => (
+                                        <option key={city} value={city === 'Select locations' ? '' : city} disabled={city === 'Select locations'}>{city}</option>
+                                    ))}
+                            </select>
                         </div>
                     </div>
                     <div className="mb-6">
