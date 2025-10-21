@@ -62,7 +62,7 @@ function Sidebar({ navClick, setNavClick }) {
                         onClick={() => setNavClick(false)}
                     >
                         <i className="fa-solid fa-gear mr-2"></i>
-                        Sitting</NavLink>
+                        Setting</NavLink>
                     <NavLink
                         to="/Help_&_Support"
                         className={({ isActive }) =>

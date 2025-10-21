@@ -12,7 +12,8 @@ export const CreatePetitionModal = ({ isOpen, onClose, onPetitionCreated }) => {
         'Chennai, TN',
         'Kolkata, WB',
         'Hyderabad, TS',
-        'Pune, MH'
+        'Pune, MH',
+        'Bhubaneswar,OD'
     ];
     const initialState = { title: '', description: '', category: '', signatureGoal: 100, location: '' };
     const [formData, setFormData] = useState(initialState);

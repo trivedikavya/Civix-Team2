@@ -14,7 +14,8 @@ function Petitions() {
         'Chennai, TN',
         'Kolkata, WB',
         'Hyderabad, TS',
-        'Pune, MH'
+        'Pune, MH',
+        'Bhubaneswar,OD'
     ];
     const tabs = [
         { id: "all", label: "All Petitions" },

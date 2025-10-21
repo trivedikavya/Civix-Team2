@@ -11,7 +11,8 @@ export const EditPetitionModal = ({ isOpen, onClose, onPetitionUpdated, petition
         'Chennai, TN',
         'Kolkata, WB',
         'Hyderabad, TS',
-        'Pune, MH'
+        'Pune, MH',
+        'Bhubaneswar,OD'
     ];
     const [formData, setFormData] = useState({ title: '', description: '', category: '', signatureGoal: 100, location: '' });
     const [error, setError] = useState('');

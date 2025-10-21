@@ -12,7 +12,8 @@ function Polls() {
         'Chennai, TN',
         'Kolkata, WB',
         'Hyderabad, TS',
-        'Pune, MH'
+        'Pune, MH',
+        'Bhubaneswar,OD'
     ];
     const tabs = [
         { id: "active", label: "Active Polls" },

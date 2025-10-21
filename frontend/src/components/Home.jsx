@@ -13,7 +13,9 @@ function Home() {
         'Chennai, TN',
         'Kolkata, WB',
         'Hyderabad, TS',
-        'Pune, MH'
+        'Pune, MH',
+        'Bhubaneswar,OD'
+
     ];
     const [selectedCategoriy, setSelectedCategoriy] = useState('All Categories');
     const [selectedCity, setSelectedCity] = useState(cities[0] || "");
