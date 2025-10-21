@@ -67,7 +67,7 @@ export default function Header() {
                 <Sidebar navClick={navClick} setNavClick={setNavClick} />
 
                 <div className="flex items-end justify-end ">
-                    <NavLink to="/Sitting" className='h-7 mr-2'>
+                    <NavLink to="/settings" className='h-7 mr-2'> {/* UPDATED LINK */}
                         <i className="fa-solid fa-gear fa-lg"></i>
                     </NavLink>
                     <div className='mr-1 cursor-pointer'>
