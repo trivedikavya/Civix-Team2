@@ -217,3 +217,100 @@ exports.addComment = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.replyToComment = async (req, res) => {
+    const { parentCommentId, text } = req.body;
+    if (!text) {
+        return res.status(400).json({ msg: 'Reply text is required' });
+    }
+
+    try {
+        const petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        const comment = petition.comments.id(parentCommentId);
+        if (!comment) {
+            return res.status(404).json({ msg: 'Comment not found' });
+        }
+
+        const newReply = { user: req.user.id, text };
+        comment.reply = comment.reply || [];
+        comment.reply.push(newReply);
+
+        await petition.save();
+
+        // Populate the new reply and return the whole petition
+        const populatedPetition = await Petition.findById(req.params.id)
+            .populate('author', 'name')
+            .populate('signatures', 'name')
+            .populate('comments.user', 'name')
+            .populate('comments.reply.user', 'name'); // Populate reply user
+
+        res.json(populatedPetition);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.addVoteToComment = async (req, res) => {
+    const { commentId, type } = req.body; // type: 'up' or 'down'
+
+    try {
+        const petition = await Petition.findById(req.params.id);
+        if (!petition) {
+            return res.status(404).json({ msg: 'Petition not found' });
+        }
+
+        // Helper function to recursively find comment in nested replies
+        const findComment = (comments, id) => {
+            for (const comment of comments) {
+                if (comment._id.toString() === id) return comment;
+                if (comment.reply && comment.reply.length > 0) {
+                    const found = findComment(comment.reply, id);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+
+        const comment = findComment(petition.comments, commentId);
+        if (!comment) {
+            return res.status(404).json({ msg: 'Comment not found' });
+        }
+
+        if (!comment.upVote) comment.upVote = [];
+        if (!comment.downVote) comment.downVote = [];
+
+        comment.upVote = comment.upVote.filter(u => u.toString() !== req.user.id);
+        comment.downVote = comment.downVote.filter(u => u.toString() !== req.user.id);
+
+        if (type === 'up') {
+            comment.upVote.push(req.user.id);
+        } else if (type === 'down') {
+            comment.downVote.push(req.user.id);
+        } else {
+            return res.status(400).json({ msg: 'Invalid vote type' });
+        }
+
+        await petition.save();
+
+        const refreshed = await Petition.findById(req.params.id)
+            .populate('comments.user', 'name')
+            .populate('comments.reply.user', 'name');
+
+        const updatedComment = findComment(refreshed.comments, commentId);
+
+        if (!updatedComment) {
+            return res.status(404).json({ msg: 'Updated comment not found after save' });
+        }
+
+        res.json(updatedComment);
+    } catch (err) {
+        console.error('Error in addVoteToComment:', err);
+        res.status(500).send('Server Error');
+    }
+};
+
