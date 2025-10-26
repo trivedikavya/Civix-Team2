@@ -1,5 +1,6 @@
 const Petition = require('../models/Petition');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 
 // Get all petitions
 exports.getPetitions = async (req, res) => {
@@ -60,6 +61,16 @@ exports.signPetition = async (req, res) => {
 
         petition.signatures.unshift(req.user.id);
         await petition.save();
+
+
+        // Create a notification for the author
+        const user = await User.findById(req.user.id);
+        const notif = new Notification({
+            user: petition.author,
+            message: `${user.name} signed your petition "${petition.title}".`
+        });
+        await notif.save();
+
         const finalPetition = await Petition.findById(req.params.id)
             .populate('author', 'name')
             .populate('signatures', 'name')
@@ -149,6 +160,13 @@ exports.updatePetitionStatus = async (req, res) => {
             { new: true }
         ).populate('author', 'name').populate('signatures', 'name').populate('comments.user', 'name'); // Populate comment user
 
+        // Create a notification for the author
+        const notif = new Notification({
+            user: petition.author,
+            message: `your petition status of "${petition.title}" has been updated to ${petition.status}.`
+        });
+        await notif.save();
+
         res.json(petition);
     } catch (err) {
         console.error(err.message);
@@ -175,8 +193,17 @@ exports.addComment = async (req, res) => {
         };
 
         petition.comments.push(newComment);
-
         await petition.save();
+
+        // Create a notification for the author
+        if (petition.author.toString() !== req.user.id) { // Avoid notifying self-comments
+            const user = await User.findById(req.user.id);
+            const notif = new Notification({
+                user: petition.author,
+                message: `${user.name} commented on your petition "${petition.title}".`
+            });
+            await notif.save();
+        }
 
         // Populate the new comment and return the whole petition
         const populatedPetition = await Petition.findById(req.params.id)
