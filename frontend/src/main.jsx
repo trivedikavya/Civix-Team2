@@ -6,26 +6,34 @@ import '/src/index.css';
 import App from '/src/App.jsx';
 import Home from '/src/components/Home.jsx';
 import Petitions from '/src/components/petitions/Petitions.jsx';
-import Polls from '/src/components/polls/Polls.jsx'; // Import the new Polls component
+import Polls from '/src/components/polls/Polls.jsx';
+import Reports from '/src/components/reports/Reports.jsx';
+import Settings from '/src/components/settings/Settings.jsx';
+import Officials from '/src/components/officials/Officials.jsx'; // ✅ Make sure this import is correct
+import HelpAndSupport from '/src/components/help/HelpAndSupport.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from '/src/context/AuthContext.jsx';
 
 const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <App />,
-        children: [
-            { path: '', element: <Home /> },
-            { path: 'petitions', element: <Petitions /> },
-            { path: 'polls', element: <Polls /> }, // Add the new route for Polls
-        ],
-    },
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      { path: '', element: <Home /> },
+      { path: 'petitions', element: <Petitions /> },
+      { path: 'polls', element: <Polls /> },
+      { path: 'reports', element: <Reports /> },
+      { path: 'settings', element: <Settings /> },
+      { path: 'help-support', element: <HelpAndSupport /> },
+      { path: 'officials', element: <Officials /> }, // ✅ ADD THIS ROUTE
+    ],
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <AuthProvider>
-            <RouterProvider router={router} />
-        </AuthProvider>
-    </StrictMode>
+  <StrictMode>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </StrictMode>
 );

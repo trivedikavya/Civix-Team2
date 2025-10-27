@@ -56,7 +56,7 @@ export default function Header() {
                         Reports
                     </NavLink>
                     <NavLink
-                        to="/Oficials"
+                        to="/Officials"
                         className={({ isActive }) =>
                             `py-2 pr-4 pl-3 ${isActive ? "text-orange-500 border-b-3" : "text-gray-700"} hover:text-orange-700`
                         }>

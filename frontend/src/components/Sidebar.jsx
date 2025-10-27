@@ -46,7 +46,7 @@ function Sidebar({ navClick, setNavClick }) {
                     Reports
                 </NavLink>
                 <NavLink
-                    to="/Oficials"
+                    to="/Officials"
                     className={({ isActive }) =>
                         `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
