@@ -1,5 +1,41 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
+
+function CommentText({ text }) {
+    const [expanded, setExpanded] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const pRef = useRef(null);
+
+    useEffect(() => {
+        const el = pRef.current;
+        if (el) {
+            const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+            const maxHeight = lineHeight * 2; // 2 lines
+            setIsOverflowing(el.scrollHeight > maxHeight + 2); // small buffer for rounding
+        }
+    }, [text]);
+
+    return (
+        <div>
+            <p
+                ref={pRef}
+                className={`text-gray-700 leading-6 overflow-hidden transition-all duration-300 ${expanded ? "max-h-none" : "max-h-[3rem]"
+                    }`}
+            >
+                {text}
+            </p>
+
+            {isOverflowing && (
+                <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="text-blue-500 text-xs mt-1"
+                >
+                    {expanded ? "Read less" : "Read more"}
+                </button>
+            )}
+        </div>
+    );
+}
 
 { /* Upvote/Downvote and Reply Buttons */ }
 const Upvote_Downvote_Reply = ({ comment, setOpenReply, activeReply, setActiveReply, petition, handleReplySubmit, handelVoteSubmit, replyText, setReplyText }) => {
@@ -58,7 +94,7 @@ const Upvote_Downvote_Reply = ({ comment, setOpenReply, activeReply, setActiveRe
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         placeholder="Write a reply..."
-                        className="flex-1 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+                        className="flex-1 w-full sm:w-[calc(100%-60px)] border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
                     />
                     <button
                         onClick={() => handleReplySubmit(comment._id)}
@@ -304,7 +340,7 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
                                                 <span className="font-semibold text-gray-800">{comment.user ? comment.user.name : "User"}</span>
                                                 <span className="text-xs text-gray-500">{timeAgo(comment.date)}</span>
                                             </div>
-                                            <p className="text-gray-700">{comment.text}</p>
+                                            <CommentText text={comment.text}/>
                                         </div>
 
                                         <Upvote_Downvote_Reply comment={comment} setOpenReply={setOpenReply} activeReply={activeReply} setActiveReply={setActiveReply} petition={petition} handleReplySubmit={handleReplySubmit} handelVoteSubmit={handelVoteSubmit} replyText={replyText} setReplyText={setReplyText} />
@@ -318,7 +354,7 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
                                                             <span className="font-semibold text-gray-800">{reply.user ? reply.user.name : "User"}</span>
                                                             <span className="text-xs text-gray-500">{timeAgo(reply.date)}</span>
                                                         </div>
-                                                        <p className="text-gray-700">{reply.text}</p>
+                                                        <CommentText text={reply.text}/>
 
                                                         <Upvote_Downvote_Reply comment={reply} handelVoteSubmit={handelVoteSubmit} />
 
