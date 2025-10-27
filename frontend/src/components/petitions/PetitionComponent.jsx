@@ -1,9 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
+function CommentText({ text }) {
+    const [expanded, setExpanded] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const pRef = useRef(null);
+
+    useEffect(() => {
+        const el = pRef.current;
+        if (el) {
+            const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+            const maxHeight = lineHeight * 2; // 2 lines
+            setIsOverflowing(el.scrollHeight > maxHeight + 2); // small buffer for rounding
+        }
+    }, [text]);
+
+    return (
+        <div>
+            <p
+                ref={pRef}
+                className={`text-gray-700 leading-6 overflow-hidden transition-all duration-300 ${expanded ? "max-h-none" : "max-h-[3rem]"
+                    }`}
+            >
+                {text}
+            </p>
+
+            {isOverflowing && (
+                <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="text-blue-500 text-xs mt-1"
+                >
+                    {expanded ? "Read less" : "Read more"}
+                </button>
+            )}
+        </div>
+    );
+}
+
 { /* Upvote/Downvote and Reply Buttons */ }
-const Upvote_Downvote_Reply = ({ comment, setOpenReply, activeReply, setActiveReply, petition, handleReplySubmit, handelVoteSubmit }) => {
-    const [replyText, setReplyText] = useState("");
+const Upvote_Downvote_Reply = ({ comment, setOpenReply, activeReply, setActiveReply, petition, handleReplySubmit, handelVoteSubmit, replyText, setReplyText }) => {
     const { user } = useAuth();
 
     const handelVote = (type) => {
@@ -59,10 +94,10 @@ const Upvote_Downvote_Reply = ({ comment, setOpenReply, activeReply, setActiveRe
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         placeholder="Write a reply..."
-                        className="flex-1 border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+                        className="flex-1 w-full sm:w-[calc(100%-60px)] border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
                     />
                     <button
-                        onClick={() => handleReplySubmit(comment._id, replyText)}
+                        onClick={() => handleReplySubmit(comment._id)}
                         className="bg-blue-500 text-white text-xs px-3 py-1.5 cursor-pointer rounded-md hover:bg-blue-600" >
                         Send
                     </button>
@@ -81,6 +116,7 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
     const { token } = useAuth();
     const [activeReply, setActiveReply] = useState(null);
     const [openReply, setOpenReply] = useState(null);
+    const [replyText, setReplyText] = useState("")
 
     const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 
@@ -127,7 +163,8 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
         if (petition) {
             setComments(petition.comments || []);
         }
-    }, [comments, petition]);
+    }, [petition]);
+
 
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
@@ -171,12 +208,22 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.msg || 'Failed to vote on comment.');
-
             // Update the specific comment in state with returned data
-            setComments((prev) =>
-                prev.map((comment) =>
-                    comment._id === data._id ? data : comment
-                )
+            setComments(prev =>
+                prev.map(comment => {
+                    // Case 1: top-level comment
+                    if (comment._id === data._id) return data;
+
+                    // Case 2: nested reply
+                    if (comment.reply && comment.reply.length > 0) {
+                        const updatedReplies = comment.reply.map(r =>
+                            r._id === data._id ? data : r
+                        );
+                        return { ...comment, reply: updatedReplies };
+                    }
+
+                    return comment;
+                })
             );
 
         } catch (err) {
@@ -185,7 +232,7 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
 
     }
 
-    const handleReplySubmit = async (commentId, replyText) => {
+    const handleReplySubmit = async (commentId) => {
         if (!replyText.trim()) return;
 
         try {
@@ -201,12 +248,15 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
             if (!response.ok) throw new Error(data.msg || 'Failed to post reply.');
 
             // Update the specific comment in state with returned data
-            setComments((prev) =>
-                prev.map((comment) =>
-                    comment._id === data._id ? data : comment
-                )
+            const updatedComment = data.comments.find(c => c._id === commentId);
+            if (!updatedComment) return;
+
+            setComments(prev =>
+                prev.map(c => c._id === commentId ? updatedComment : c)
             );
             setActiveReply(null);
+            setReplyText("");
+            setOpenReply(commentId);
         } catch (err) {
             console.error("Error adding reply:", err);
         }
@@ -290,10 +340,10 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
                                                 <span className="font-semibold text-gray-800">{comment.user ? comment.user.name : "User"}</span>
                                                 <span className="text-xs text-gray-500">{timeAgo(comment.date)}</span>
                                             </div>
-                                            <p className="text-gray-700">{comment.text}</p>
+                                            <CommentText text={comment.text}/>
                                         </div>
 
-                                        <Upvote_Downvote_Reply comment={comment} setOpenReply={setOpenReply} activeReply={activeReply} setActiveReply={setActiveReply} petition={petition} handleReplySubmit={handleReplySubmit} handelVoteSubmit={handelVoteSubmit} />
+                                        <Upvote_Downvote_Reply comment={comment} setOpenReply={setOpenReply} activeReply={activeReply} setActiveReply={setActiveReply} petition={petition} handleReplySubmit={handleReplySubmit} handelVoteSubmit={handelVoteSubmit} replyText={replyText} setReplyText={setReplyText} />
 
                                         {/* Replies */}
                                         {openReply === comment._id && comment.reply.length > 0 && (
@@ -304,7 +354,7 @@ const PetitionDetailsModal = ({ isOpen, onClose, petition, onCommentAdded }) => 
                                                             <span className="font-semibold text-gray-800">{reply.user ? reply.user.name : "User"}</span>
                                                             <span className="text-xs text-gray-500">{timeAgo(reply.date)}</span>
                                                         </div>
-                                                        <p className="text-gray-700">{reply.text}</p>
+                                                        <CommentText text={reply.text}/>
 
                                                         <Upvote_Downvote_Reply comment={reply} handelVoteSubmit={handelVoteSubmit} />
 
