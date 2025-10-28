@@ -12,7 +12,7 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-house mr-2"></i>
@@ -21,7 +21,7 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/petitions"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-regular fa-file-zipper mr-2"></i>
@@ -30,25 +30,25 @@ function Sidebar({ navClick, setNavClick }) {
                 <NavLink
                     to="/polls"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-square-poll-vertical mr-2"></i>
                     Polls
                 </NavLink>
                 <NavLink
-                    to="/reports" // Corrected path case
+                    to="/Reports"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa-solid fa-signal mr-2"></i>
                     Reports
                 </NavLink>
                 <NavLink
-                    to="/officials" // Corrected path case to lowercase
+                    to="/Oficials"
                     className={({ isActive }) =>
-                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                        `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                     onClick={() => setNavClick(false)}>
                     <i className="fa fa-user mr-2" ></i>
@@ -57,7 +57,7 @@ function Sidebar({ navClick, setNavClick }) {
                     <NavLink
                         to="/settings" // UPDATED
                         className={({ isActive }) =>
-                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                         onClick={() => setNavClick(false)}
                     >
@@ -66,7 +66,7 @@ function Sidebar({ navClick, setNavClick }) {
                     <NavLink
                         to="/help-support" // UPDATED
                         className={({ isActive }) =>
-                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"}
+                            `block border-b-2 border-r-2 my-1.5 p-2 px-4 rounded-xl border-t-white bg-white ${isActive ? "text-orange-500 border-orange-400" : "text-gray-700  border-gray-400"} 
                         hover:text-orange-700 hover:shadow-2xl`}
                         onClick={() => setNavClick(false)}>
                         <i className="fa-regular fa-circle-question mr-1"></i>

@@ -1,10 +1,7 @@
-// File: backend/controllers/reportController.js
-
 const Petition = require('../models/Petition');
 const Poll = require('../models/Poll');
 const User = require('../models/User');
-// Remove mongoose import if not used elsewhere after removing getMyActivityReport
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Helper function to get counts by status/category using MongoDB aggregation
 const getAggregateData = async (Model, groupField) => {
@@ -92,9 +89,30 @@ exports.getCommunityReport = async (req, res) => {
   }
 };
 
-// REMOVE the entire getMyActivityReport function
-/*
+// @route   GET api/reports/my-activity
+// @desc    Get user-specific activity metrics
+// @access  Private (Requires authentication)
 exports.getMyActivityReport = async (req, res) => {
-  // ... (function content removed)
+  try {
+    // The user ID comes from the authentication middleware
+    const userId = new mongoose.Types.ObjectId(req.user.id);
+
+    // Count content authored by the user
+    const petitionsAuthored = await Petition.countDocuments({ author: userId });
+    const pollsCreated = await Poll.countDocuments({ createdBy: userId });
+    
+    // Count content the user has participated in
+    const petitionsSigned = await Petition.countDocuments({ signatures: userId });
+    const pollsVotedIn = await Poll.countDocuments({ voters: userId });
+
+    res.json({
+      petitionsAuthored,
+      petitionsSigned,
+      pollsCreated,
+      pollsVotedIn,
+    });
+  } catch (err) {
+    console.error('My Activity Report Error:', err.message);
+    res.status(500).send('Server Error generating user activity report');
+  }
 };
-*/
