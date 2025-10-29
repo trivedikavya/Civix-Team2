@@ -116,7 +116,7 @@ function Officials() {
         <h2 className="text-xl font-semibold text-gray-700 mb-4">
           My Petition & Poll Analytics
         </h2>
-        <div className="flex flex-wrap justify-center md:justify-between items-center gap-6">
+        <div className="flex flex-wrap justify-center md:justify-around items-center gap-6">
           {/* Petition Analytics */}
           <div className="bg-white p-4 rounded-xl shadow-md flex-1 min-w-[280px] max-w-md">
             <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">
