@@ -7,7 +7,7 @@ function Sidebar({ navClick, setNavClick }) {
     const { logout } = useAuth();
     return (
         <div
-            className={`fixed top-17 left-0 h-[calc(100vh-64px)] bg-gray-100 font-bold px-4 py-6 shadow-md z-50 transform transition-transform duration-500 ease-in-out ${navClick ? "translate-x-0" : "translate-x-[-100%]"} md:translate-x-0`} >
+            className={`fixed top-17 left-0 h-[calc(100dvh-64px)] bg-gray-100 font-bold px-4 py-6 shadow-md z-50 transform transition-transform duration-500 ease-in-out ${navClick ? "translate-x-0" : "translate-x-[-100%]"} md:translate-x-0`} >
             <div className="flex flex-col h-full">
                 <NavLink
                     to="/"
