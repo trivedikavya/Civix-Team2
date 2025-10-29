@@ -7,7 +7,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 const API_URL = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001') + '/api/reports';
 
-// Custom Hook for fetching report data
+// Custom Hook for fetching report data (Only Community Data)
 const useReportData = () => {
     const { token } = useAuth();
     const [communityData, setCommunityData] = useState(null);
@@ -83,9 +83,9 @@ function Reports() {
                 label: 'Status',
                 data: Object.values(petitionAnl?.status || {}),
                 backgroundColor: [
-                    'rgba(16, 185, 129, 0.7)',
-                    'rgba(239, 68, 68, 0.7)',
-                    'rgba(249, 115, 22, 0.7)',
+                    'rgba(16, 185, 129, 0.7)', // Active
+                    'rgba(239, 68, 68, 0.7)',   // Closed
+                    'rgba(249, 115, 22, 0.7)',  // Under Review
                 ],
                 borderColor: [
                     'rgba(16, 185, 129, 1)',
@@ -110,7 +110,7 @@ function Reports() {
                     'rgba(139, 92, 246, 0.7)',
                     'rgba(249, 115, 22, 0.7)',
                     'rgba(217, 70, 239, 0.7)',
-                    'rgba(22, 163, 74, 0.7)',
+                    'rgba(22, 163, 74, 0.7)', // Example color palette
                 ],
                 borderColor: [
                     'rgba(59, 130, 246, 1)',
@@ -127,12 +127,12 @@ function Reports() {
     };
 
     const pollStatusData = {
-        labels: Object.keys(pollAnl?.status || {}),
+        labels: Object.keys(pollAnl?.status || {}), // Should be ['Active', 'Closed'] or similar
         datasets: [
             {
                 label: 'Poll Status',
                 data: Object.values(pollAnl?.status || {}),
-                backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(239, 68, 68, 0.7)'],
+                backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(239, 68, 68, 0.7)'], // Green for Active, Red for Closed
                 borderColor: ['rgba(16, 185, 129, 1)', 'rgba(239, 68, 68, 1)'],
                 borderWidth: 1,
             },
@@ -150,7 +150,7 @@ function Reports() {
                     'rgba(249, 115, 22, 0.7)',
                     'rgba(139, 92, 246, 0.7)',
                     'rgba(217, 70, 239, 0.7)',
-                    'rgba(22, 163, 74, 0.7)',
+                    'rgba(22, 163, 74, 0.7)', // Example color palette
                 ],
                 borderColor: [
                     'rgba(59, 130, 246, 1)',
@@ -168,13 +168,13 @@ function Reports() {
         <div className="pt-20 p-4 bg-gradient-to-b from-sky-200 to-gray-300 min-h-screen md:pl-54">
             <div className='pl-6 pt-6'>
                 <h1 className="text-3xl font-bold text-gray-800 font-inria">Reports & Analytics</h1>
-                <p className="text-gray-700 mt-1 font-bold">Track civic engagement and measure the impact of petitions and polls.</p>
+                <p className="text-gray-700 mt-1 font-bold">Track community civic engagement and measure the impact of petitions and polls.</p>
             </div>
 
             {/* Main Content Container */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-6">
 
-                {/* Community Overview Section */}
+                {/* Content for Community Overview */}
                 {comm && (
                     <div className='space-y-6'>
                         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
@@ -198,20 +198,37 @@ function Reports() {
                             />
                         </div>
 
+                        {/* --- Monthly Summary --- */}
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-700 mb-4">Monthly Summary</h2>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8'>
+                                <MetricCard
+                                    title="Petitions This Month"
+                                    value={comm.petitionsThisMonth}
+                                    iconClass="fa-solid fa-calendar-plus"
+                                    color="#06b6d4"
+                                />
+                                <MetricCard
+                                    title="Polls This Month"
+                                    value={comm.pollsThisMonth}
+                                    iconClass="fa-solid fa-calendar-plus"
+                                    color="#8b5cf6"
+                                />
+                            </div>
+                        </div>
+
+
                         {/* Petition Analytics */}
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Petition Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">
-                                        Petition Status
-                                    </h3>
-                                        <Doughnut
-                                            data={petitionStatusData} />
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-sm">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
+                                    <Doughnut data={petitionStatusData} />
                                 </div>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-sm">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Categories</h3>
-                                        <Pie data={petitionCategoryData} />
+                                    <Pie data={petitionCategoryData} />
                                 </div>
                             </div>
                         </div>
@@ -220,11 +237,11 @@ function Reports() {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Poll Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-sm">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Poll Status</h3>
                                     <Doughnut data={pollStatusData} />
                                 </div>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md max-w-sm">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Polls by Location</h3>
                                     <Pie data={pollLocationData} />
                                 </div>
@@ -240,7 +257,7 @@ function Reports() {
                 >
                     <i className="fa-solid fa-rotate-right mr-2"></i> Refresh Data
                 </button>
-
+                
             </div>
         </div>
     );
