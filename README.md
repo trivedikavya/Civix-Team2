@@ -116,7 +116,7 @@ Built with a **React** frontend powered by **Vite** and styled with **Tailwind C
   <strong>Team Members:</strong>
 </p>
 <p align="center">
-  <a href="[Link to Member 1 Profile/GitHub, optional]">Kavya Trivedi</a> •
+  <a href="https://github.com/trivedikavya">Kavya Trivedi</a> •
   <a href="[Link to Member 2 Profile/GitHub, optional]">[Member Name 2]</a> •
   <a href="[Link to Member 3 Profile/GitHub, optional]">[Member Name 3]</a>
   </p>
