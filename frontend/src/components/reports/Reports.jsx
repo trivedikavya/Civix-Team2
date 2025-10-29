@@ -202,13 +202,18 @@ function Reports() {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Petition Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Status</h3>
-                                    <Doughnut data={petitionStatusData} />
+                                <div className="bg-white p-4 rounded-xl shadow-md">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">
+                                        Petition Status
+                                    </h3>
+                                        <Doughnut
+                                            data={petitionStatusData} />
                                 </div>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Petition Categories</h3>
-                                    <Pie data={petitionCategoryData} />
+                                    <div className="w-full h-full">
+                                        <Pie data={petitionCategoryData} />
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -217,11 +222,11 @@ function Reports() {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4">Poll Analytics</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Poll Status</h3>
                                     <Doughnut data={pollStatusData} />
                                 </div>
-                                <div className="bg-white p-4 rounded-xl shadow-md max-w-md mx-auto">
+                                <div className="bg-white p-4 rounded-xl shadow-md">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Polls by Location</h3>
                                     <Pie data={pollLocationData} />
                                 </div>
