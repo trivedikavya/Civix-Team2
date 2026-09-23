@@ -18,36 +18,36 @@
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 Civix is a full-stack web application designed to empower citizens by providing a modern, accessible platform for digital civic engagement. It bridges the gap between residents and local governance through intuitive tools for petitions, polls, and direct interaction tracking.
 
 Built with a **React** frontend powered by **Vite** and styled with **Tailwind CSS**, Civix offers a responsive and user-friendly experience. The robust **Node.js** and **Express** backend, backed by **MongoDB**, ensures secure data management, real-time updates, and distinct user roles for citizens and public officials.
 
-## ✨ Key Features
+##  Key Features
 
-* **🔐 Secure Authentication:** JWT-based login/registration system differentiating between Citizens and Public Officials.
-* **✍️ Petition Management:**
+* ** Secure Authentication:** JWT-based login/registration system differentiating between Citizens and Public Officials.
+* ** Petition Management:**
     * Effortless creation with rich descriptions, categories, goals, and location targeting.
     * Comprehensive viewing and filtering capabilities.
     * Secure digital signing process (authors cannot self-sign).
     * Author controls for editing and deletion.
     * **Status Management:** Public Officials can transition petitions through 'Active', 'Under Review', and 'Closed' states.
     * **Interactive Discussions:** Threaded comments and replies with upvote/downvote mechanics.
-* **📊 Community Polls:**
+* ** Community Polls:**
     * Simple poll creation with custom options (2-5), descriptions, location focus, and optional closing dates.
     * Intuitive voting interface for active polls.
     * Dynamic result visualization upon voting or poll closure.
     * Author controls for editing and deletion.
-* **📈 Reporting & Analytics:**
+* ** Reporting & Analytics:**
     * **Community Dashboard:** High-level overview of platform engagement (total petitions, polls, users, activity trends).
     * **Personal Insights:** Track individual contributions and participation.
     * **Official's Dashboard:** Tailored analytics for Public Officials focusing on their created content and overall civic response within their purview.
-* **🔔 Real-time Notifications:** Keep users informed about relevant activities on their content.
-* **⚙️ User Settings:** Manage profile details, update passwords, and handle account deletion securely.
-* **❓ Help & Support:** Integrated FAQ for user guidance.
+* ** Real-time Notifications:** Keep users informed about relevant activities on their content.
+* ** User Settings:** Manage profile details, update passwords, and handle account deletion securely.
+* ** Help & Support:** Integrated FAQ for user guidance.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Area      | Technology                                                                                                    |
 | :-------- | :------------------------------------------------------------------------------------------------------------ |
@@ -58,7 +58,7 @@ Built with a **React** frontend powered by **Vite** and styled with **Tailwind C
 | Styling   | Tailwind CSS                                                                                                   |
 | Dev Tools | ESLint, Vite Dev Server                                                                                       |
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -109,14 +109,6 @@ Built with a **React** frontend powered by **Vite** and styled with **Tailwind C
 ---
 
 <p align="center">
-  Built with ❤️ by <strong>Team 2</strong>
+  Built with  by <strong>Team 2</strong>
 </p>
 
-<p align="center">
-  <strong>Team Members:</strong>
-</p>
-<p align="center">
-  <a href="https://github.com/trivedikavya">Kavya Trivedi</a> •
-  <a href="[Link to Member 2 Profile/GitHub, optional]">[Member Name 2]</a> •
-  <a href="[Link to Member 3 Profile/GitHub, optional]">[Member Name 3]</a>
-  </p>
