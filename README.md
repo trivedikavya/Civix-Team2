@@ -26,26 +26,26 @@ Built with a **React** frontend powered by **Vite** and styled with **Tailwind C
 
 ##  Key Features
 
-* ** Secure Authentication:** JWT-based login/registration system differentiating between Citizens and Public Officials.
-* ** Petition Management:**
+* **Secure Authentication:** JWT-based login/registration system differentiating between Citizens and Public Officials.
+* **Petition Management:**
     * Effortless creation with rich descriptions, categories, goals, and location targeting.
     * Comprehensive viewing and filtering capabilities.
     * Secure digital signing process (authors cannot self-sign).
     * Author controls for editing and deletion.
     * **Status Management:** Public Officials can transition petitions through 'Active', 'Under Review', and 'Closed' states.
     * **Interactive Discussions:** Threaded comments and replies with upvote/downvote mechanics.
-* ** Community Polls:**
+* **Community Polls:**
     * Simple poll creation with custom options (2-5), descriptions, location focus, and optional closing dates.
     * Intuitive voting interface for active polls.
     * Dynamic result visualization upon voting or poll closure.
     * Author controls for editing and deletion.
-* ** Reporting & Analytics:**
+* **Reporting & Analytics:**
     * **Community Dashboard:** High-level overview of platform engagement (total petitions, polls, users, activity trends).
     * **Personal Insights:** Track individual contributions and participation.
     * **Official's Dashboard:** Tailored analytics for Public Officials focusing on their created content and overall civic response within their purview.
-* ** Real-time Notifications:** Keep users informed about relevant activities on their content.
-* ** User Settings:** Manage profile details, update passwords, and handle account deletion securely.
-* ** Help & Support:** Integrated FAQ for user guidance.
+* **Real-time Notifications:** Keep users informed about relevant activities on their content.
+* **User Settings:** Manage profile details, update passwords, and handle account deletion securely.
+* **Help & Support:** Integrated FAQ for user guidance.
 
 ##  Tech Stack
 
